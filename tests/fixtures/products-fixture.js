@@ -2,10 +2,11 @@ const appDataSource = require('../../API/models/appDataSource');
 
 const createProducts = async (productList) => {
   let data = [];
+
   for (let product of productList) {
     data.push([
       product.productName,
-      product.modelNumber,
+      product.productModelNumber,
       product.categoryId,
       product.originalPrice,
       product.productAgeId,
@@ -30,6 +31,7 @@ const createProducts = async (productList) => {
 
 const createProductImages = async (imageList) => {
   let data = [];
+
   for (let image of imageList) {
     data.push([image.url, image.productId]);
   }
@@ -47,6 +49,7 @@ const createProductImages = async (imageList) => {
 
 const createBuyings = async (buyingList) => {
   let data = [];
+
   for (let buying of buyingList) {
     data.push([
       buying.userId,
@@ -71,6 +74,7 @@ const createBuyings = async (buyingList) => {
 
 const createSellings = async (sellingList) => {
   let data = [];
+
   for (let selling of sellingList) {
     data.push([
       selling.userId,
@@ -82,19 +86,20 @@ const createSellings = async (sellingList) => {
 
   return appDataSource.query(
     `
-        INSERT INTO sellings (
-        user_id,
-        product_id,
-        bid_price,
-        bid_status_id) 
-        VALUES ?
-        `,
+      INSERT INTO sellings (
+      user_id,
+      product_id,
+      bid_price,
+      bid_status_id) 
+      VALUES ?
+      `,
     [data]
   );
 };
 
 const createDeals = async (dealList) => {
   let data = [];
+
   for (let deal of dealList) {
     data.push([
       deal.buyingId,
@@ -121,17 +126,18 @@ const createDeals = async (dealList) => {
 
 const createLikes = async (likeList) => {
   let data = [];
+
   for (let like of likeList) {
     data.push([like.userId, like.productId]);
   }
 
   return appDataSource.query(
     `
-          INSERT INTO likes (
-          user_id,
-          product_id)
-          VALUES ?
-          `,
+      INSERT INTO likes (
+      user_id,
+      product_id)
+      VALUES ?
+      `,
     [data]
   );
 };

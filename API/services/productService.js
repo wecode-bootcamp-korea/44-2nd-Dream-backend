@@ -26,6 +26,27 @@ const getProductDetail = async (productId) => {
   return productDetail;
 };
 
+const getProductList = async (
+  categoryId,
+  ageId,
+  levelId,
+  sort,
+  sortorder,
+  limit,
+  offset
+) => {
+  return await productDao.getProductList(
+    categoryId,
+    ageId,
+    levelId,
+    sort,
+    sortorder,
+    limit,
+    offset
+  );
+};
+
 module.exports = {
+  getProductList,
   getProductDetail,
 };
