@@ -147,6 +147,34 @@ describe('prdouct detail', () => {
     productId: 1,
   };
 
+  const firstReview = {
+    title: '리뷰에여',
+    content: '내용은 없음',
+    userId: 1,
+    productId: 1,
+  };
+
+  const secondReview = {
+    title: '리뷰에여2',
+    content: '내용은 없음2',
+    userId: 2,
+    productId: 1,
+  };
+
+  const thirdReview = {
+    title: '리뷰에여3',
+    content: '내용은 없음3',
+    userId: 3,
+    productId: 1,
+  };
+
+  const fourthReview = {
+    title: '리뷰에여4',
+    content: '내용은 없음4',
+    userId: 4,
+    productId: 1,
+  };
+
   beforeAll(async () => {
     app = createApp();
     await appDataSource.initialize();

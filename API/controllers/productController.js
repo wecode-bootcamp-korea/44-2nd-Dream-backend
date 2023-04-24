@@ -45,4 +45,6 @@ module.exports = {
   getProductDetail,
   getProductList,
   productByLike,
+  getProductDetail,
+  getProductList,  
 };

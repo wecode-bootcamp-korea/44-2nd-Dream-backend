@@ -86,6 +86,7 @@ const getProductList = async (
     const sortList = {
       like: 'likeCount',
       immediatebuyprice: 'immediateBuyPrice',
+      immediateSalePrice: 'immediateSalePrice',
       review: 'reviewCount',
       premium: 'premiumPercent',
     };
