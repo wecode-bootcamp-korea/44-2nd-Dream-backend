@@ -5,7 +5,6 @@ const catchAsync = (func) => {
 };
 
 const globalErrorHandler = (err, req, res, next) => {
-  console.error(err);
   err.statusCode = err.statusCode || 500;
   res.status(err.statusCode).json({ message: err.message });
 };
@@ -20,8 +19,8 @@ class BaseError extends Error {
 class DatabaseError extends BaseError {
   constructor(message) {
     super(message);
-    this.code = 'DATABASE_ERROR';
-    this.statusCode = 500;
+    this.message = 'DATABASE_ERROR';
+    this.statusCode = 400;
   }
 }
 
