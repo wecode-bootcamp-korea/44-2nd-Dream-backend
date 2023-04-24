@@ -1,4 +1,4 @@
-API/db/schema.sql
+db/schema.sql
 .env
 
 # Created by https://www.toptal.com/developers/gitignore/api/vim,macos,windows,linux,visualstudiocode,dotenv,node
@@ -6,8 +6,8 @@ API/db/schema.sql
 ### dotenv ###
 .env
 ### Linux ###
-API/db/schema.sql
-API/db/migrations/schema.sql
+db/schema.sql
+db/migrations/schema.sql
 *~
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
