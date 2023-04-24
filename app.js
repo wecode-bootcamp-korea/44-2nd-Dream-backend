@@ -16,6 +16,7 @@ const createApp = () => {
   app.use(express.json());
 
   app.use(router);
+  app.use(globalErrorHandler);
 
   app.get('/ping', (req, res) => {
     res.status(200).json({ message: 'pong' });
@@ -27,7 +28,6 @@ const createApp = () => {
     err.statusCode = 404;
     next(err);
   });
-  app.use(globalErrorHandler);
 
   return app;
 };
