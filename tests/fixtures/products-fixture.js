@@ -13,7 +13,7 @@ const createProducts = async (productList) => {
     ]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
     INSERT INTO products (
     name,
@@ -34,7 +34,7 @@ const createProductImages = async (imageList) => {
     data.push([image.url, image.productId]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
       INSERT INTO product_images (
       url,
@@ -80,7 +80,7 @@ const createSellings = async (sellingList) => {
     ]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
         INSERT INTO sellings (
         user_id,
@@ -105,7 +105,7 @@ const createDeals = async (dealList) => {
     ]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
         INSERT INTO deals (
         buying_id,
@@ -125,7 +125,7 @@ const createLikes = async (likeList) => {
     data.push([like.userId, like.productId]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
           INSERT INTO likes (
           user_id,

@@ -6,9 +6,8 @@ const { createUsers } = require('../fixtures/users-fixture');
 const productFixture = require('../fixtures/products-fixture');
 const appDataSource = require('../../API/models/appDataSource');
 
-describe('prdouct detail', () => {
+describe('graph/info API', () => {
   let app;
-
   const firstProduct = {
     productName: '포르쉐 911',
     modelNumber: 'porche-asfgg-154342',
@@ -59,63 +58,38 @@ describe('prdouct detail', () => {
   };
 
   const userSeller = {
-    kakaoId: 11234514,
+    kakaoId: 112345142,
     nickname: 'seller kim',
     email: 'testing3@test.com',
   };
 
   const userBuyer = {
-    kakaoId: 11234515,
+    kakaoId: 112345152,
     nickname: 'buyer kim',
     email: 'testing4@test.com',
   };
 
   const userDealer = {
-    kakaoId: 11234516,
+    kakaoId: 112345162,
     nickname: 'dealer kim',
     email: 'testing5@test.com',
   };
 
   const userSuccess = {
-    kakaoId: 11234517,
+    kakaoId: 112345172,
     nickname: 'success kim',
     email: 'testing6@test.com',
   };
 
-  const firstLike = {
-    userId: 1,
-    productId: 1,
-  };
-
-  const secondLike = {
-    userId: 2,
-    productId: 1,
-  };
-
-  const thirdLike = {
-    userId: 3,
-    productId: 1,
-  };
-
-  const fourthLike = {
-    userId: 4,
-    productId: 1,
-  };
-
   beforeAll(async () => {
     app = createApp();
+    await appDataSource.initialize();
     await createUsers([userSeller, userBuyer, userDealer, userSuccess]);
     await productFixture.createProducts([firstProduct]);
     await productFixture.createProductImages([firstProductImage]);
     await productFixture.createBuyings([firstBuying, secondBuying]);
     await productFixture.createSellings([firstSelling, secondSelling]);
     await productFixture.createDeals([firstDeal]);
-    await productFixture.createLikes([
-      firstLike,
-      secondLike,
-      thirdLike,
-      fourthLike,
-    ]);
   });
 
   afterAll(async () => {
@@ -126,33 +100,43 @@ describe('prdouct detail', () => {
       'buyings',
       'sellings',
       'deals',
-      'likes',
     ]);
     await appDataSource.destroy();
   });
 
-  test('SUCCESS: product Detail', async () => {
-    const response = await request(app).get('/products/1');
-    expect(Object.keys(response.body)).toEqual([
-      'productName',
-      'modelNumber',
-      'categoryName',
-      'originalPrice',
-      'imageUrl',
-      'productAge',
-      'productLevel',
-      'likeCount',
-      'buyNowPrice',
-      'sellNowPrice',
-      'recentDealPrice',
-      'premiumPercent',
+  test('SUCCESS:graph info', async () => {
+    const response = await request(app).get('/bid/graph/1');
+
+    expect(response.body.bidPrice).toEqual(['500000.00']);
+    expect(response.body.date).toEqual(['2023-04-28']);
+    expect(response.statusCode).toEqual(200);
+  });
+
+  test('🤬fail:NOT_productId', async () => {
+    const response = await request(app).get('/bid/graph/4');
+
+    expect(response.body).toEqual({ message: 'NOT_DATA' });
+    expect(response.statusCode).toEqual(404);
+  });
+  test('SUCCESS:info sellings / buyings / deal', async () => {
+    const response = await request(app).get('/bid/info/1');
+
+    expect(response.body.selling).toEqual([
+      { bidPrice: '600000.00', quantity: '1' },
+    ]);
+    expect(response.body.buying).toEqual([
+      { bidPrice: '300000.00', quantity: '1' },
+    ]);
+    expect(response.body.deal).toEqual([
+      { bidPrice: '500000.00', dates: '2023-04-28' },
     ]);
     expect(response.statusCode).toEqual(200);
   });
 
-  test('FAIL: invalid productId', async () => {
-    const response = await request(app).get('/products/12');
-    expect(response.body).toEqual({ message: 'PRODUCT_DOES_NOT_EXIST' });
+  test('🤬:isellings / isbuyings ', async () => {
+    const response = await request(app).get('/bid/info/4');
+
+    expect(response.body).toEqual({ message: 'NOT_SELLINGS_DUYINGS_DATA' });
     expect(response.statusCode).toEqual(404);
   });
 });

@@ -6,7 +6,7 @@ const createUsers = async (userList) => {
     data.push([user.kakaoId, user.nickname, user.email]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
     INSERT INTO users (
     kakao_id,
