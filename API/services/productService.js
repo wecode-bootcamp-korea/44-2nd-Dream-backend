@@ -29,6 +29,7 @@ const productByLike = async (userId) => {
   const productList = await productDao.productByLike(userId);
   return productList;
 };
+
 const getProductList = async (
   categoryId,
   ageId,
