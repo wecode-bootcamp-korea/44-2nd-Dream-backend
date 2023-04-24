@@ -4,6 +4,7 @@ const { createApp } = require('../../app');
 const { truncateTables } = require('../test-client');
 const { createUsers } = require('../fixtures/users-fixture');
 const productFixture = require('../fixtures/products-fixture');
+const reviewFixture = require('../fixtures/reviews-fixture');
 const appDataSource = require('../../API/models/appDataSource');
 
 describe('prdouct detail', () => {
@@ -11,9 +12,18 @@ describe('prdouct detail', () => {
 
   const firstProduct = {
     productName: '포르쉐 911',
-    modelNumber: 'porche-asfgg-154342',
+    productModelNumber: 'porche-asfgg-154342',
     categoryId: 2,
-    originalPrice: 219900.0,
+    originalPrice: 219900,
+    productAgeId: 3,
+    productLevel: 3,
+  };
+
+  const secondProduct = {
+    productName: '포르쉐 911',
+    productModelNumber: 'porche-asfgg-1543423',
+    categoryId: 2,
+    originalPrice: 2199000,
     productAgeId: 3,
     productLevel: 3,
   };
@@ -21,6 +31,11 @@ describe('prdouct detail', () => {
   const firstProductImage = {
     url: 'https://www.lego.com/cdn/cs/set/assets/blt3d62bb5d68e6dbd7/10295.jpg?format=webply&fit=bounds&quality=75&width=800&height=800&dpr=1',
     productId: 1,
+  };
+
+  const secondProdcutImage = {
+    url: 'https://www.lego.com/cdn/cs/set/assets/blt3d62bb5d68e6dbd7/10295.jpg?format=webply&fit=bounds&quality=75&width=800&height=800&dpr=1',
+    productId: 2,
   };
 
   const firstBuying = {
@@ -102,11 +117,42 @@ describe('prdouct detail', () => {
     productId: 1,
   };
 
+  const firstReview = {
+    title: '리뷰에여',
+    content: '내용은 없음',
+    userId: 1,
+    productId: 1,
+  };
+
+  const secondReview = {
+    title: '리뷰에여2',
+    content: '내용은 없음2',
+    userId: 2,
+    productId: 1,
+  };
+
+  const thirdReview = {
+    title: '리뷰에여3',
+    content: '내용은 없음3',
+    userId: 3,
+    productId: 1,
+  };
+
+  const fourthReview = {
+    title: '리뷰에여4',
+    content: '내용은 없음4',
+    userId: 4,
+    productId: 1,
+  };
+
   beforeAll(async () => {
     app = createApp();
     await createUsers([userSeller, userBuyer, userDealer, userSuccess]);
-    await productFixture.createProducts([firstProduct]);
-    await productFixture.createProductImages([firstProductImage]);
+    await productFixture.createProducts([firstProduct, secondProduct]);
+    await productFixture.createProductImages([
+      firstProductImage,
+      secondProdcutImage,
+    ]);
     await productFixture.createBuyings([firstBuying, secondBuying]);
     await productFixture.createSellings([firstSelling, secondSelling]);
     await productFixture.createDeals([firstDeal]);
@@ -115,6 +161,12 @@ describe('prdouct detail', () => {
       secondLike,
       thirdLike,
       fourthLike,
+    ]);
+    await reviewFixture.createReviews([
+      firstReview,
+      secondReview,
+      thirdReview,
+      fourthReview,
     ]);
   });
 
@@ -127,6 +179,7 @@ describe('prdouct detail', () => {
       'sellings',
       'deals',
       'likes',
+      'reviews',
     ]);
     await appDataSource.destroy();
   });
@@ -145,8 +198,31 @@ describe('prdouct detail', () => {
       'buyNowPrice',
       'sellNowPrice',
       'recentDealPrice',
-      'premiumPercent',
     ]);
+    expect(response.statusCode).toEqual(200);
+  });
+
+  test('SUCCESS: product list', async () => {
+    const response = await request(app).get(
+      '/products?limit=2&offset=0&sort=like&sortorder=desc'
+    );
+
+    expect(response.body.productAgeId).toEqual(3);
+    expect(response.body.productLevelId).toEqual(3);
+    expect(response.body.likeCount).toEqual(4);
+    expect(response.body.reviewCount).toEqual(4);
+    expect(response.statusCode).toEqual(200);
+  });
+
+  test('SUCCESS: product list', async () => {
+    const response = await request(app).get(
+      '/products?limit=2&offset=0&sort=like&sortorder=desc'
+    );
+
+    expect(response.body[0].productAgeId).toEqual(3);
+    expect(response.body[0].productLevelId).toEqual(3);
+    expect(response.body[0].likeCount).toEqual('4');
+    expect(response.body[0].reviewCount).toEqual('4');
     expect(response.statusCode).toEqual(200);
   });
 

@@ -1,4 +1,5 @@
 const appDataSource = require('./appDataSource');
+const { DatabaseError } = require('../utils/error');
 
 const productDetail = async (productId) => {
   try {
@@ -56,7 +57,107 @@ const isExistingProduct = async (productId) => {
   }
 };
 
+const getProductList = async (
+  categoryId,
+  ageId,
+  levelId,
+  sort,
+  sortorder,
+  limit,
+  offset
+) => {
+  try {
+    let whereCondition = '';
+    let categoryChose = [];
+
+    if (categoryId)
+      categoryChose.push(`products.category_id IN (${categoryId})`);
+    if (ageId) categoryChose.push(`products.product_age_id IN (${ageId})`);
+    if (levelId)
+      categoryChose.push(`products.product_level_id IN (${levelId})`);
+
+    whereCondition =
+      categoryChose.length > 0
+        ? `WHERE ` + `` + `${categoryChose.join(' AND ')}`
+        : '';
+
+    const sortList = {
+      like: 'likeCount',
+      immediatebuyprice: 'immediateBuyPrice',
+      review: 'reviewCount',
+      premium: 'premiumPercent',
+    };
+
+    const sortOrder = {
+      desc: 'DESC',
+      asc: 'ASC',
+    };
+
+    const sortCondition = sortList[sort]
+      ? `${sortList[sort]} ${sortOrder[sortorder]}`
+      : 'products.id';
+
+    const productList = await appDataSource.query(
+      `
+      SELECT
+        products.id as productId,
+        products.name as productName,
+        products.model_number as productModelNumber,
+        products.original_price as productOriginalPrice,
+        product_ages.id as productAgeId,
+        product_ages.age as productAge,
+        product_levels.id as productLevelId,
+        product_levels.level as productLevel,
+        categories.id as categoryId,
+        categories.name as categoryName,
+        (SELECT
+          product_images.url
+         FROM product_images
+         WHERE products.id = product_images.product_id
+         ORDER BY product_images.url LIMIT 1) as productImage,
+        (SELECT
+          buyings.bid_price
+         FROM buyings
+         WHERE products.id = buyings.product_id
+         ORDER BY buyings.bid_price LIMIT 1) as immediateSalePrice,
+        (SELECT
+          sellings.bid_price
+         FROM sellings
+         WHERE products.id = sellings.product_id
+         ORDER BY sellings.bid_price LIMIT 1) as immediateBuyPrice,
+         (SELECT count(id) from likes WHERE product_id = products.id GROUP BY product_id ORDER BY likes.product_id LIMIT 1) likeCount,
+         (SELECT count(id) from reviews WHERE product_id = products.id GROUP BY product_id ORDER BY reviews.product_id LIMIT 1) reviewCount,
+         (SELECT
+          (buyings.bid_price - products.original_price)/products.original_price * 100
+          FROM buyings JOIN deals ON deals.buying_id = buyings.id
+          WHERE buyings.product_id = products.id LIMIT 1
+          ) as premiumPercent
+        FROM product_ages 
+        RIGHT JOIN products ON product_ages.id = products.product_age_id
+        LEFT JOIN product_levels ON products.product_level_id = product_levels.id
+        LEFT JOIN categories ON products.category_id = categories.id
+        LEFT JOIN product_images ON products.id = product_images.product_id
+        LEFT JOIN likes ON products.id = likes.product_id
+        LEFT JOIN reviews ON products.id = reviews.product_id
+        LEFT JOIN buyings ON products.id = buyings.product_id
+        LEFT JOIN deals ON buyings.id = deals.buying_id
+        LEFT JOIN sellings ON deals.selling_id = sellings.id
+        ${whereCondition}
+        GROUP BY products.id
+        ORDER BY ${sortCondition}
+        LIMIT ? OFFSET ?
+    `,
+      [limit, offset]
+    );
+    return productList;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError(500, 'DatabaseError');
+  }
+};
+//
 module.exports = {
+  getProductList,
   productDetail,
   isExistingProduct,
 };

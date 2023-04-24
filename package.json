@@ -1,7 +1,6 @@
 {
   "name": "44-2nd-dream-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "directories": {
     "test": "tests"
@@ -31,5 +30,14 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "supertest": "^6.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/issues"
+  },
+  "homepage": "https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend#readme",
+  "description": ""
 }
