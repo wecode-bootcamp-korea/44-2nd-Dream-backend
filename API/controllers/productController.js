@@ -8,8 +8,15 @@ const getProductDetail = catchAsync(async (req, res) => {
 });
 
 const getProductList = catchAsync(async (req, res) => {
-  const { categoryId, ageId, levelId, sort, sortorder, limit, offset } =
-    req.query;
+  const {
+    categoryId,
+    ageId,
+    levelId,
+    sort,
+    sortorder,
+    limit = 10,
+    offset = 0,
+  } = req.query;
 
   const products = await productService.getProductList(
     categoryId,
