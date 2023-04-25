@@ -8,6 +8,24 @@ const createBuyPayment = async (addressId, userId, biddingId, dealNumber) => {
   return payment;
 };
 
+const createSellPayment = async (
+  dealNumber,
+  cardNumberId,
+  accountNumberId,
+  userId,
+  biddingId
+) => {
+  const [createPayment] = await paymentDao.createSellPayment(
+    dealNumber,
+    cardNumberId,
+    accountNumberId,
+    userId,
+    biddingId
+  );
+
+  return createPayment;
+};
+
 const buyBidding = async (addressId, userId, biddingId) => {
   await paymentDao.buyingAddress(addressId, userId, biddingId);
   const [bidingbuy] = await paymentDao.buyBidding(userId, biddingId);
@@ -15,4 +33,26 @@ const buyBidding = async (addressId, userId, biddingId) => {
   return bidingbuy;
 };
 
-module.exports = { createBuyPayment, buyBidding };
+const createSellBidding = async (
+  userId,
+  cardNumberId,
+  accountNumberId,
+  biddingId
+) => {
+  await paymentDao.updateSellbiddingInfo(
+    userId,
+    cardNumberId,
+    accountNumberId,
+    biddingId
+  );
+  const [biddingsell] = await paymentDao.getSellBidding(userId, biddingId);
+
+  return biddingsell;
+};
+
+module.exports = {
+  createSellPayment,
+  createBuyPayment,
+  buyBidding,
+  createSellBidding,
+};

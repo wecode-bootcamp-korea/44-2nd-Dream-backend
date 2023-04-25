@@ -3,10 +3,10 @@ const express = require('express');
 const productRouter = require('./productRouter');
 const bidRouter = require('./bidRouter');
 const userRouter = require('./userRouter');
+const paymentRouter = require('./paymentRouter');
 const likeRouter = require('./likeRouter');
 const searchRouter = require('./searchRouter');
 const reviewRouter = require('./reviewRouter');
-const paymentRouter = require('./paymentRouter');
 
 const router = express.Router();
 

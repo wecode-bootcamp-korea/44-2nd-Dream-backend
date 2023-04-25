@@ -1,7 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../utils/error');
 const { bidStatusEnum } = require('./enum');
-const { query } = require('express');
 
 const getReviewByProductId = async (productId) => {
   try {

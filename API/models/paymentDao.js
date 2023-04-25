@@ -19,6 +19,7 @@ const buyBidding = async (userId, biddingId) => {
     throw new DatabaseError('DATABASE_ERROR');
   }
 };
+
 const buyingAddress = async (addressId, userId, biddingId) => {
   try {
     await appDataSource.query(
@@ -32,6 +33,133 @@ const buyingAddress = async (addressId, userId, biddingId) => {
     );
   } catch (err) {
     throw new DatabaseError('DATABASE_ERROR');
+  }
+};
+
+const getSellBidding = async (userId, biddingId) => {
+  try {
+    return await appDataSource.query(
+      `
+      SELECT
+        pi.url AS productImage,
+        s.bid_price AS bidPrice,
+        d.selling_commission AS commission,
+      DATE_FORMAT(s.due_date, '%Y-%m-%d') dueDate
+      FROM sellings s
+      JOIN product_images pi ON pi.product_id = s.product_id
+      JOIN deals d ON d.selling_id = s.id
+      WHERE s.id = ?
+      AND user_id = ?
+      `,
+      [biddingId, userId]
+    );
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError('DATABASE_ERROR');
+  }
+};
+
+const updateSellbiddingInfo = async (
+  cardNumberId,
+  accountNumberId,
+  userId,
+  biddingId
+) => {
+  const queryRunner = appDataSource.createQueryRunner();
+
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+  try {
+    const createOrderTable = await queryRunner.query(
+      `
+      UPDATE sellings
+      SET card_number_id = ?
+      WHERE user_id = ?
+      AND id = ?
+      `,
+      [cardNumberId, userId, biddingId]
+    );
+
+    await queryRunner.query(
+      `
+      UPDATE sellings
+      SET account_number_id = ?
+      WHERE user_id = ?
+      AND id = ?
+      `,
+      [accountNumberId, userId, biddingId]
+    );
+
+    await queryRunner.commitTransaction();
+  } catch (err) {
+    await queryRunner.rollbackTransaction();
+    throw new DatabaseError('DATABASE_ERROR');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+const createSellPayment = async (
+  dealNumber,
+  cardNumberId,
+  accountNumberId,
+  userId
+) => {
+  const queryRunner = appDataSource.createQueryRunner();
+  await queryRunner.connect();
+
+  await queryRunner.startTransaction();
+  try {
+    const paymentDone = dealStatusEnum.paymentDone;
+
+    await queryRunner.query(
+      `
+      UPDATE sellings
+      SET card_number_Id = ?
+      WHERE user_id = ?
+      `,
+      [cardNumberId, userId]
+    );
+
+    await queryRunner.query(
+      `
+      UPDATE sellings
+      SET account_number_Id = ?
+      WHERE user_id = ?
+      `,
+      [accountNumberId, userId]
+    );
+
+    await queryRunner.query(
+      `
+      UPDATE deals
+      SET deal_status_id = ?
+      WHERE deal_number = ?
+      `,
+      [paymentDone, dealNumber]
+    );
+
+    const sellPayment = await queryRunner.query(
+      `
+      SELECT
+        pi.url AS productImage,
+        d.selling_commission AS commission,
+        s.bid_price AS bidPrice
+      FROM product_images pi
+      JOIN sellings s
+      ON pi.product_id = s.product_id
+      JOIN deals d
+      ON d.selling_id = s.id
+      WHERE d.deal_number = ?
+    `,
+      [dealNumber]
+    );
+    return sellPayment;
+  } catch (err) {
+    await queryRunner.rollbackTransaction();
+    throw new DatabaseError('DATABASE_ERROR');
+  } finally {
+    await queryRunner.release();
   }
 };
 
@@ -78,4 +206,12 @@ const createBuyPayment = async (dealNumber) => {
   }
 };
 
-module.exports = { createBuyPayment, buyBidding, buyingAddress };
+module.exports = {
+  createBuyPayment,
+  createSellPayment,
+  buyBidding,
+  buyingAddress,
+  updateSellbiddingInfo,
+  getSellBidding,
+  createSellPayment,
+};

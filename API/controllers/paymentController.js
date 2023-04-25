@@ -34,7 +34,41 @@ const buyBidding = catchAsync(async (req, res) => {
   return res.status(200).json(buyBidding);
 });
 
+const createSellPayment = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const { dealNumber, cardNumberId, accountNumberId, biddingId } = req.body;
+
+  const createSellPayment = await paymentService.createSellPayment(
+    dealNumber,
+    cardNumberId,
+    accountNumberId,
+    userId,
+    biddingId
+  );
+
+  return res.status(201).json(createSellPayment);
+});
+
+const createSellBidding = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const { cardNumberId, accountNumberId, biddingId } = req.body;
+
+  if (!cardNumberId || !accountNumberId || !biddingId) {
+    throw new BaseError('KEY_ERROR', 400);
+  }
+  const createSellBidding = await paymentService.createSellBidding(
+    userId,
+    cardNumberId,
+    accountNumberId,
+    biddingId
+  );
+
+  return res.status(201).json(createSellBidding);
+});
+
 module.exports = {
+  createSellPayment,
   createBuyPayment,
   buyBidding,
+  createSellBidding,
 };
