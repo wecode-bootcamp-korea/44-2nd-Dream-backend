@@ -54,12 +54,15 @@ const inputAddress = async (userId, address, detail_address, receiver) => {
 const inputNewAccount = async (accountNumber, userId) => {
   return userDao.inputNewAccount(accountNumber, userId);
 };
+
 const inputNewCard = async (cardNumber, userId) => {
   return userDao.inputNewCard(cardNumber, userId);
 };
+
 const getAccountListByUser = async (userId) => {
   return userDao.getAccountListByUser(userId);
 };
+
 const getCardListByUser = async (userId) => {
   return userDao.getCardListByUser(userId);
 };

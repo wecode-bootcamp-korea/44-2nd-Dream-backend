@@ -6,6 +6,13 @@ const router = express.Router();
 
 router.post('/buying', checkLogInToken, paymentController.createBuyPayment);
 router.post('/Biding/buying', checkLogInToken, paymentController.buyBidding);
+router.post('/selling', checkLogInToken, paymentController.createSellPayment);
+router.post(
+  '/Bidding/Selling',
+  checkLogInToken,
+  paymentController.createSellBidding
+);
+
 module.exports = {
   router,
 };
