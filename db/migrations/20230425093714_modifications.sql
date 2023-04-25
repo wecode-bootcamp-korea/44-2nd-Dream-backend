@@ -4,4 +4,3 @@ INSERT INTO categories(
 ) VALUE ('Basic'), ('Car'), ('Movie'), ('Building');
 
 -- migrate:down
-
