@@ -6,6 +6,7 @@ const { createUsers } = require('../fixtures/users-fixture');
 const productFixture = require('../fixtures/products-fixture');
 const reviewFixture = require('../fixtures/reviews-fixture');
 const appDataSource = require('../../API/models/appDataSource');
+const { afterEach } = require('node:test');
 
 describe('prdouct detail', () => {
   let app;
@@ -114,6 +115,7 @@ describe('prdouct detail', () => {
 
   const fourthLike = {
     userId: 4,
+
     productId: 1,
   };
 
@@ -147,6 +149,16 @@ describe('prdouct detail', () => {
 
   beforeAll(async () => {
     app = createApp();
+    await appDataSource.initialize();
+    await truncateTables([
+      'users',
+      'products',
+      'product_images',
+      'buyings',
+      'sellings',
+      'deals',
+      'likes',
+    ]);
     await createUsers([userSeller, userBuyer, userDealer, userSuccess]);
     await productFixture.createProducts([firstProduct, secondProduct]);
     await productFixture.createProductImages([
@@ -186,6 +198,7 @@ describe('prdouct detail', () => {
 
   test('SUCCESS: product Detail', async () => {
     const response = await request(app).get('/products/1');
+
     expect(Object.keys(response.body)).toEqual([
       'productName',
       'modelNumber',
