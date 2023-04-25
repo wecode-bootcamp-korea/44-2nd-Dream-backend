@@ -59,7 +59,7 @@ const createBuyings = async (buyingList) => {
     ]);
   }
 
-  return appDataSource.query(
+  return await appDataSource.query(
     `
         INSERT INTO buyings (
         user_id,

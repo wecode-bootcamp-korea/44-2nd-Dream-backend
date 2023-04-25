@@ -1,5 +1,6 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../utils/error');
+const { bidStatusEnum } = require('./enum');
 
 const productDetail = async (productId) => {
   try {
@@ -31,6 +32,7 @@ const productDetail = async (productId) => {
     );
     return productDetail;
   } catch (err) {
+    console.log(err);
     err.message = 'DATABASE_ERROR';
     err.statusCode = 400;
     throw err;
@@ -155,9 +157,58 @@ const getProductList = async (
     throw new DatabaseError(500, 'DatabaseError');
   }
 };
-//
+
+const productByLike = async (userId) => {
+  try {
+    const bid = bidStatusEnum.bid;
+
+    const productList = await appDataSource.query(
+      `SELECT
+      product_id
+      FROM likes
+      WHERE user_id = ${userId}
+      `
+    );
+
+    let productId = [];
+    await productList.forEach((i) => {
+      productId.push(i.product_id);
+    });
+
+    let productIdstr = productId.join();
+
+    return await appDataSource.query(
+      `SELECT
+      products.id as productId,
+      products.name as productName,
+      products.model_number as productModelNumber,
+      categories.name as categoryName,
+      product_images.url  as productImage,
+      buyings.immediateSalePrice
+      FROM products
+      LEFT JOIN categories ON products.category_id = categories.id
+      LEFT JOIN product_images ON products.id = product_images.product_id
+      LEFT JOIN (SELECT
+      b.product_id,
+      MAX(bid_price) AS immediateSalePrice
+      FROM buyings b
+      WHERE b.bid_status_id = ${bid}
+      GROUP BY b.product_id) AS buyings
+      ON products.id = buyings.product_id
+      WHERE products.id IN (${productIdstr})
+    `
+    );
+  } catch (err) {
+    console.log(err);
+    err.message = 'DATABASE_ERROR';
+    err.statusCode = 400;
+    throw err;
+  }
+};
+
 module.exports = {
   getProductList,
   productDetail,
   isExistingProduct,
+  productByLike,
 };

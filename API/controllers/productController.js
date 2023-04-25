@@ -23,8 +23,18 @@ const getProductList = catchAsync(async (req, res) => {
 
   return res.status(200).json(products);
 });
+const productByLike = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+
+  if (!userId) return new BaseError('YOU_NOT_INVALID', 401);
+
+  const data = await productService.productByLike(userId);
+
+  return res.status(200).json(data);
+});
 
 module.exports = {
   getProductDetail,
   getProductList,
+  productByLike,
 };
