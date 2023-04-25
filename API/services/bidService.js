@@ -1,5 +1,7 @@
 const bidDao = require('../models/bidDao');
+const productDao = require('../models/productDao');
 const { BaseError } = require('../utils/error');
+const { BidCase } = require('../models/bidDao');
 
 const graphByTerm = async (productId, term) => {
   let graphData = await bidDao.graphByTerm(productId, term);
@@ -28,7 +30,30 @@ const infoByproductId = async (productId) => {
   const deal = await bidDao.dealInfo(productId);
   return { selling: sellings, buying: buyings, deal: deal };
 };
+
+const inputBidPrice = async (productId, bidType, bidPrice, dueDate, userId) => {
+  const bidCase = new BidCase(productId, bidType, bidPrice, dueDate, userId);
+  await bidCase.biddingIn();
+
+  const { productName, modelNumber, imageUrl } = await productDao.productDetail(
+    productId
+  );
+  const inputResult = {
+    dealId: (bidCase.dealInfo && bidCase.dealInfo.id) || null,
+    dealNumber: (bidCase.dealInfo && bidCase.dealInfo.dealNumber) || null,
+    commission: bidCase.commissionRate * bidCase.bidPrice,
+    productName: productName,
+    modelNumber: modelNumber,
+    imageUrl: imageUrl,
+    dueDate: dueDate,
+    bidPrice: bidCase.bidPrice,
+  };
+
+  return inputResult;
+};
+
 module.exports = {
   graphByTerm,
   infoByproductId,
+  inputBidPrice,
 };
