@@ -18,7 +18,36 @@ const infoByproductId = catchAsync(async (req, res) => {
 
   return res.status(200).json(data);
 });
+
+const inputBidPrice = catchAsync(async (req, res) => {
+  const { productId, bidType, bidPrice, dueDate } = req.body;
+
+  if (
+    !productId ||
+    !bidType ||
+    !bidPrice ||
+    !dueDate ||
+    !(bidType == 'buying' || bidType == 'selling')
+  ) {
+    const error = new Error('KEY ERROR');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const userId = req.user.id;
+  const inputResult = await bidService.inputBidPrice(
+    productId,
+    bidType,
+    bidPrice,
+    dueDate,
+    userId
+  );
+
+  res.status(201).json(inputResult);
+});
+
 module.exports = {
   graphByTerm,
   infoByproductId,
+  inputBidPrice,
 };
