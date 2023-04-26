@@ -17,15 +17,18 @@ const productDetail = async (productId) => {
             FROM buyings b
             JOIN deals d
             ON d.buying_id = b.id
-            WHERE d.created_at = (SELECT max(created_at) FROM deals)) recentDealPrice,
+            WHERE d.created_at = (SELECT max(created_at) FROM deals)
+            LIMIT 1) recentDealPrice,
             (SELECT 
                 bid_price
             FROM sellings
-            WHERE bid_price = (SELECT min(bid_price) FROM sellings WHERE bid_status_id = 1)) buyNowPrice,
+            WHERE bid_price = (SELECT min(bid_price) FROM sellings WHERE bid_status_id = 1)
+            LIMIT 1) buyNowPrice,
             (SELECT 
                 bid_price
             FROM buyings
-            WHERE bid_price = (SELECT max(bid_price) FROM buyings WHERE bid_status_id = 1)) sellNowPrice,
+            WHERE bid_price = (SELECT max(bid_price) FROM buyings WHERE bid_status_id = 1)
+            LIMIT 1) sellNowPrice,
             (SELECT 
               COUNT(user_id)
             FROM likes
