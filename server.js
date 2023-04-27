@@ -1,5 +1,6 @@
 const { createApp } = require('./app');
 const appDataSource = require('./API/models/appDataSource.js');
+const { job } = require('./API/utils/bidStatusScheduler');
 
 const startSever = async () => {
   const app = createApp();
@@ -15,6 +16,8 @@ const startSever = async () => {
     });
 
   const PORT = process.env.PORT || 3000;
+
+  job;
 
   app.listen(PORT, () => {
     console.log(`Listening to request on 127.0.0.1:${PORT}`);
