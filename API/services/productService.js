@@ -1,5 +1,6 @@
 const productDao = require('../models/productDao');
 const { BaseError } = require('../utils/error');
+const { BidCase } = require('../models/bidDao');
 
 const getProductDetail = async (productId) => {
   const checkProductId = await productDao.isExistingProduct(productId);
@@ -9,11 +10,17 @@ const getProductDetail = async (productId) => {
   }
 
   const productDetail = await productDao.productDetail(productId);
+  const bidCase = new BidCase(productId);
+
+  productDetail.buyNowPrice = await bidCase.getBuyNowPrice();
+  productDetail.sellNowPrice = await bidCase.getSellNowPrice();
+  productDetail.recentDealPrice = await bidCase.getRecentDealPrice();
   productDetail.premiumPercent = (
     ((productDetail.recentDealPrice - productDetail.originalPrice) /
       productDetail.originalPrice) *
     100
   ).toFixed(1);
+
   return productDetail;
 };
 
