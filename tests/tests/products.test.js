@@ -142,10 +142,10 @@ describe('prdouct detail', () => {
       'imageUrl',
       'productAge',
       'productLevel',
-      'recentDealPrice',
+      'likeCount',
       'buyNowPrice',
       'sellNowPrice',
-      'likeCount',
+      'recentDealPrice',
       'premiumPercent',
     ]);
     expect(response.statusCode).toEqual(200);
