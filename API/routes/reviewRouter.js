@@ -11,5 +11,7 @@ router.post(
   upload.single('reviewImg'),
   reviewController.createReview
 );
+router.get('', reviewController.getReviewByProductId);
+router.delete('/:reviewId', checkLogInToken, reviewController.deleteReview);
 
 module.exports = { router };

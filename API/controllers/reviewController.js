@@ -21,4 +21,23 @@ const createReview = catchAsync(async (req, res) => {
   return res.status(201).json({ message: 'CREATE_REVIEW' });
 });
 
-module.exports = { createReview };
+const getReviewByProductId = catchAsync(async (req, res) => {
+  const { productId } = req.query;
+  const getReview = await reviewService.getReviewByProductId(productId);
+  return res.status(200).json(getReview);
+});
+
+const deleteReview = catchAsync(async (req, res) => {
+  const { reviewId } = req.params;
+
+  if (!reviewId) throw new BaseError(400, 'KEY_ERROR');
+
+  await reviewService.deleteReview(reviewId);
+  res.status(200).json({ message: 'SUCCESS_DELETE' });
+});
+
+module.exports = {
+  createReview ,
+  getReviewByProductId,
+  deleteReview,
+};
