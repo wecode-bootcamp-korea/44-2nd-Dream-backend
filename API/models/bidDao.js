@@ -25,6 +25,11 @@ class BidCase {
         WHERE bid_price = (SELECT ${minOrMax}(bid_price) FROM ${table} WHERE bid_status_id = ${bidStatusEnum.bid} AND product_id = ${productIdValue}) 
         `
       );
+
+      if (bidPrice == undefined) {
+        return null;
+      }
+
       return parseFloat(Object.values(bidPrice));
     } catch (err) {
       err.message = 'DATABASE_ERROR';
@@ -61,6 +66,11 @@ class BidCase {
             ORDER BY d.created_at DESC
             `
       );
+
+      if (bidPrice == undefined) {
+        return null;
+      }
+
       return parseFloat(Object.values(bidPrice));
     } catch (err) {
       err.message = 'DATABASE_ERROR';
