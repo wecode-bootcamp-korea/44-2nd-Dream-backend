@@ -30,6 +30,7 @@ const getProductList = catchAsync(async (req, res) => {
 
   return res.status(200).json(products);
 });
+
 const productByLike = catchAsync(async (req, res) => {
   const userId = req.user.id;
 

@@ -11,8 +11,6 @@ const signInKakao = async (kakaoToken) => {
     },
   });
 
-  console.log('result', result);
-
   if (result.status !== 200) {
     throw new BaseError('INVALID_KAKAO_TOKEN', 401);
   }
@@ -38,4 +36,17 @@ const getUserById = async (userId) => {
   return await userDao.getUserById(userId);
 };
 
-module.exports = { signInKakao, getUserById };
+const addressByUserId = async (userId) => {
+  return await userDao.addressByUserId(userId);
+};
+
+const inputAddress = async (userId, address, detail_address, receiver) => {
+  const addressId = await userDao.inputAddress(
+    userId,
+    address,
+    detail_address,
+    receiver
+  );
+  return addressId;
+};
+module.exports = { signInKakao, getUserById, inputAddress, addressByUserId };

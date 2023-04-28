@@ -171,6 +171,7 @@ const productByLike = async (userId) => {
     );
 
     let productId = [];
+
     await productList.forEach((i) => {
       productId.push(i.product_id);
     });

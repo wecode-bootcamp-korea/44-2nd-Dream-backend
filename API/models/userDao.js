@@ -67,5 +67,38 @@ const createUser = async (kakaoId, nickname, email) => {
     throw new DatabaseError('DataSource_Error');
   }
 };
+const inputAddress = async (userId, address, detail_address, receiver) => {
+  const inputAddress = await appDataSource.query(
+    `
+  INSERT INTO addressses
+   (user_id,address,detail_address,receiver)
+   VALUES(?,?,?,?)
+  `,
+    [userId, address, detail_address, receiver]
+  );
 
-module.exports = { getUserByKakaoId, getUserById, createUser };
+  return inputAddress.insertId;
+};
+
+const addressByUserId = async (userId) => {
+  return await appDataSource.query(
+    `
+  SELECT
+  address,
+  detail_address,
+  receiver,
+  id AS addressId
+  FROM addressses
+  WHERE user_id =?
+  `,
+    [userId]
+  );
+};
+
+module.exports = {
+  getUserByKakaoId,
+  getUserById,
+  createUser,
+  inputAddress,
+  addressByUserId,
+};
