@@ -18,6 +18,12 @@ const createReview = async (userId, productId, content, title, url) => {
   return createReview;
 };
 
-module.exports = {
-  createReview,
+const getReviewByProductId = async (productId) => {
+  return await reviewDao.getReviewByProductId(productId);
 };
+
+const deleteReview = async (reviewId) => {
+  return await reviewDao.deleteReview(reviewId);
+};
+
+module.exports = { createReview, getReviewByProductId, deleteReview };
