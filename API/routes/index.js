@@ -6,6 +6,7 @@ const userRouter = require('./userRouter');
 const likeRouter = require('./likeRouter');
 const searchRouter = require('./searchRouter');
 const reviewRouter = require('./reviewRouter');
+const paymentRouter = require('./paymentRouter');
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/like', likeRouter.router);
 router.use('/reviews', reviewRouter.router);
 router.use('/search', searchRouter.router);
 router.use('/reviews', reviewRouter.router);
+router.use('/payment', paymentRouter.router);
 
 module.exports = router;

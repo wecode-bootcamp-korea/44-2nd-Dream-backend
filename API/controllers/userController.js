@@ -18,4 +18,26 @@ const getUserById = catchAsync(async (req, res) => {
   return res.status(200).json(userInfo);
 });
 
-module.exports = { signInKakao, getUserById };
+const inputAddress = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+  const { address, detail_address, receiver } = req.body;
+  if (!address || !detail_address || !receiver) {
+    throw new BaseError('KEY_ERROR', 400);
+  }
+  const addressId = await userService.inputAddress(
+    userId,
+    address,
+    detail_address,
+    receiver
+  );
+
+  return res.status(201).json({ addressId: addressId });
+});
+
+const addressByUserId = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+
+  const addresses = await userService.addressByUserId(userId);
+  return res.status(200).json(addresses);
+});
+module.exports = { signInKakao, getUserById, addressByUserId, inputAddress };
