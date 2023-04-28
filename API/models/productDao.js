@@ -5,6 +5,7 @@ const productDetail = async (productId) => {
     const [productDetail] = await appDataSource.query(
       `
         SELECT 
+            p.id productId,
             p.name productName,
             p.model_number modelNumber,
             c.name categoryName,
