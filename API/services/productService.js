@@ -15,11 +15,13 @@ const getProductDetail = async (productId) => {
   productDetail.buyNowPrice = await bidCase.getBuyNowPrice();
   productDetail.sellNowPrice = await bidCase.getSellNowPrice();
   productDetail.recentDealPrice = await bidCase.getRecentDealPrice();
-  productDetail.premiumPercent = (
-    ((productDetail.recentDealPrice - productDetail.originalPrice) /
-      productDetail.originalPrice) *
-    100
-  ).toFixed(1);
+  productDetail.recentDealPrice == null
+    ? (productDetail.premiumPercent = null)
+    : (productDetail.premiumPercent = (
+        ((productDetail.recentDealPrice - productDetail.originalPrice) /
+          productDetail.originalPrice) *
+        100
+      ).toFixed(1));
 
   return productDetail;
 };
