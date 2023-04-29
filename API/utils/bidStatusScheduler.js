@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const appDataSource = require('../models/appDataSource');
 const { bidStatusEnum } = require('../models/enum');
+const { BaseError } = require('./error');
 
 const job = schedule.scheduleJob('1 * * * * *', async () => {
   const bidStatus = bidStatusEnum.bid;
@@ -14,28 +15,32 @@ const job = schedule.scheduleJob('1 * * * * *', async () => {
     WHERE due_date < NOW()
     AND bid_status_id = ${bidStatus}`
   );
-  sellingId = Array.isArray(sellingId) ? sellingId : [sellingId];
-  let sellingProductId = [];
-  let sellingUserId = [];
 
-  sellingId.forEach((element) => {
-    sellingProductId.push(element.product_id);
-    sellingUserId.push(element.user_id);
-  });
+  if (sellingId.length != 0) {
+    sellingId = Array.isArray(sellingId) ? sellingId : [sellingId];
+    let sellingProductId = [];
+    let sellingUserId = [];
 
-  let sellProductStr = sellingProductId.join();
-  let sellUserStr = sellingUserId.join();
+    sellingId.forEach((element) => {
+      sellingProductId.push(element.product_id);
+      sellingUserId.push(element.user_id);
+    });
 
-  await appDataSource.query(
-    `
+    let sellProductStr = sellingProductId.join();
+    let sellUserStr = sellingUserId.join();
+
+    await appDataSource.query(
+      `
     UPDATE
     sellings
     SET bid_status_id = ${failStatus}
     WHERE product_id IN (${sellProductStr})
     AND user_id IN (${sellUserStr})
     `
-  );
-  const buyingId = await appDataSource.query(
+    );
+  }
+
+  let buyingId = await appDataSource.query(
     `SELECT
     product_id,
     user_id
@@ -43,28 +48,30 @@ const job = schedule.scheduleJob('1 * * * * *', async () => {
     WHERE due_date < NOW()
     AND bid_status_id = ${bidStatus}`
   );
-  buyingId = Array.isArray(buyingId) ? buyingId : [buyingId];
 
-  const buyingProductId = [];
-  const buyingUserId = [];
+  if (buyingId.length != 0) {
+    buyingId = Array.isArray(buyingId) ? buyingId : [buyingId];
+    const buyingProductId = [];
+    const buyingUserId = [];
 
-  buyingId.forEach((element) => {
-    buyingProductId.push(element.product_id);
-    buyingUserId.push(element.user_id);
-  });
+    buyingId.forEach((element) => {
+      buyingProductId.push(element.product_id);
+      buyingUserId.push(element.user_id);
+    });
 
-  let buyProductStr = buyingProductId.join();
-  let buyUserStr = buyingUserId.join();
+    let buyProductStr = buyingProductId.join();
+    let buyUserStr = buyingUserId.join();
 
-  await appDataSource.query(
-    `
+    await appDataSource.query(
+      `
     UPDATE
     buyings
     SET bid_status_id = ${failStatus}
     WHERE product_id IN (${buyProductStr})
     AND user_id IN (${buyUserStr})
     `
-  );
+    );
+  }
 });
 
 module.exports = { job };
