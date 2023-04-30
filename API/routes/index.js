@@ -1,9 +1,9 @@
 const express = require('express');
+
 const productRouter = require('./productRouter');
 const bidRouter = require('./bidRouter');
 const userRouter = require('./userRouter');
 const likeRouter = require('./likeRouter');
-const bidRouter = require('./bidRouter');
 const searchRouter = require('./searchRouter');
 const reviewRouter = require('./reviewRouter');
 
