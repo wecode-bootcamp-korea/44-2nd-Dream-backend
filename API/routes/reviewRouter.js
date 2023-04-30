@@ -14,4 +14,13 @@ router.post(
 router.get('', reviewController.getReviewByProductId);
 router.delete('/:reviewId', checkLogInToken, reviewController.deleteReview);
 
-module.exports = { router };
+router.patch(
+  '',
+  checkLogInToken,
+  upload.single('reviewImg'),
+  reviewController.updateReview
+);
+
+module.exports = {
+  router,
+};

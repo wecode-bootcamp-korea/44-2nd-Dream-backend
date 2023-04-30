@@ -26,4 +26,19 @@ const deleteReview = async (reviewId) => {
   return await reviewDao.deleteReview(reviewId);
 };
 
-module.exports = { createReview, getReviewByProductId, deleteReview };
+const updateReview = async (userId, reviewId, title, content, url) => {
+  const checkReviewId = await reviewDao.verificationReviewId(reviewId);
+
+  if (!checkReviewId) {
+    throw new BaseError(400, 'Not Found review');
+  }
+
+  return await reviewDao.updateReview(userId, reviewId, title, content, url);
+};
+
+module.exports = {
+  createReview,
+  getReviewByProductId,
+  deleteReview,
+  updateReview,
+};
