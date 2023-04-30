@@ -114,7 +114,7 @@ const deleteReview = async (reviewId) => {
 
 const updateReview = async (userId, reviewId, title, content, url) => {
   try {
-    const aa = await appDataSource.query(
+    await appDataSource.query(
       `UPDATE reviews
         LEFT JOIN review_images ON (reviews.id = review_images.review_id)
           SET 
