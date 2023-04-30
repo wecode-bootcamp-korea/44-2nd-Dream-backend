@@ -21,8 +21,8 @@ const checkBuyed = async (userId, productId) => {
     return id;
   } catch (err) {
     throw new DatabaseError('DataSource_Error');
-}
-}
+  }
+};
 
 const getReviewByProductId = async (productId) => {
   try {
@@ -72,15 +72,15 @@ const createReview = async (userId, productId, content, title, url) => {
         VALUES(?,?)`,
       [reviewId.insertId, url]
     );
-      
+
     return reviewId.insertId;
-      } catch (err) {
-        await queryRunner.rollbackTransaction();
-        throw new DatabaseError('DataSource_Error');
-    } finally {
-      await queryRunner.release();
-    }
+  } catch (err) {
+    await queryRunner.rollbackTransaction();
+    throw new DatabaseError('DataSource_Error');
+  } finally {
+    await queryRunner.release();
   }
+};
 
 const deleteReview = async (reviewId) => {
   const queryRunner = appDataSource.createQueryRunner();
@@ -112,9 +112,48 @@ const deleteReview = async (reviewId) => {
   }
 };
 
-module.exports = { 
+const updateReview = async (userId, reviewId, title, content, url) => {
+  try {
+    const aa = await appDataSource.query(
+      `UPDATE reviews
+        LEFT JOIN review_images ON (reviews.id = review_images.review_id)
+          SET 
+            reviews.title = ?,
+            reviews.content = ?,
+            review_images.url = ?
+          WHERE reviews.user_id = ? AND reviews.id = ?
+    `,
+      [title, content, url, userId, reviewId]
+    );
+  } catch (err) {
+    throw new DatabaseError(400, 'Database Error');
+  }
+};
+
+const verificationReviewId = async (reviewId) => {
+  try {
+    const [result] = await appDataSource.query(
+      `
+        SELECT EXISTS (
+          SELECT
+            id
+          FROM reviews
+          WHERE id = ?
+        ) as existing
+      `,
+      [reviewId]
+    );
+    return !!parseInt(result.existing);
+  } catch {
+    throw new DatabaseError(500, 'DatabaseError');
+  }
+};
+
+module.exports = {
   createReview,
   checkBuyed,
   getReviewByProductId,
   deleteReview,
+  updateReview,
+  verificationReviewId,
 };

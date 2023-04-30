@@ -36,8 +36,18 @@ const deleteReview = catchAsync(async (req, res) => {
   res.status(200).json({ message: 'SUCCESS_DELETE' });
 });
 
+const updateReview = catchAsync(async (req, res) => {
+  const { reviewId, title, content } = req.body;
+  const url = req.file ? req.file.location : '';
+  const userId = req.user.id;
+
+  await reviewService.updateReview(userId, reviewId, title, content, url);
+  return res.status(200).json({ message: 'SUCCESS UPDATE' });
+});
+
 module.exports = {
   createReview,
   getReviewByProductId,
   deleteReview,
+  updateReview,
 };
