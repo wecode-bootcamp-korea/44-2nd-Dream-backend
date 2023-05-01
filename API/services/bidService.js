@@ -47,6 +47,7 @@ const inputBidPrice = async (productId, bidType, bidPrice, dueDate, userId) => {
     imageUrl: imageUrl,
     dueDate: dueDate,
     bidPrice: bidCase.bidPrice,
+    biddingId: bidCase.biddingId,
   };
 
   return inputResult;
