@@ -6,9 +6,9 @@ const signInKakao = catchAsync(async (req, res) => {
 
   if (!kakaoToken) throw new BaseError(401, 'NEED_KAKAOTOKEN');
 
-  const accessToken = await userService.signInKakao(kakaoToken);
+  const { accessToken, name } = await userService.signInKakao(kakaoToken);
 
-  return res.status(200).json({ token: accessToken });
+  return res.status(200).json({ token: accessToken, nickname: name });
 });
 
 const getUserById = catchAsync(async (req, res) => {
