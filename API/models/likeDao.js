@@ -34,6 +34,7 @@ const createLike = async (proudctId, userId) => {
     throw new DatabaseError('INVALID_DATA_INPUT');
   }
 };
+
 const deleteLike = async (proudctId, userId) => {
   try {
     const deleteLike = await appDataSource.query(
