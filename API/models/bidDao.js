@@ -128,8 +128,16 @@ class BidCase {
       if (await this.isExistingBid()) {
         await queryRunner.query(
           `UPDATE ${this.table}
-        SET bid_price = ${this.bidPrice}
-        WHERE user_id = ${this.userId} AND product_id = ${this.productId} AND bid_status_id = ${bidStatusEnum.bid}`
+        SET bid_price = ?,
+            due_date = ?
+        WHERE user_id = ? AND product_id = ? AND bid_status_id = ?`,
+          [
+            this.bidPrice,
+            this.dueDate,
+            this.userId,
+            this.productId,
+            bidStatusEnum.bid,
+          ]
         );
 
         const [bidding] = await queryRunner.query(
