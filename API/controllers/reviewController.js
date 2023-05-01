@@ -30,14 +30,14 @@ const getReviewByProductId = catchAsync(async (req, res) => {
 const deleteReview = catchAsync(async (req, res) => {
   const { reviewId } = req.params;
 
-  if (!reviewId) throw new BaseError(400, 'KEY_ERROR');
+  if (!reviewId) throw new BaseError('KEY_ERROR', 400);
 
   await reviewService.deleteReview(reviewId);
   res.status(200).json({ message: 'SUCCESS_DELETE' });
 });
 
 module.exports = {
-  createReview ,
+  createReview,
   getReviewByProductId,
   deleteReview,
 };

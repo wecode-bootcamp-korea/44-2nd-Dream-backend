@@ -29,7 +29,42 @@ const search = async (limit, offset, keyword) => {
     throw new DatabaseError(500, 'Database Error');
   }
 };
-//
+
+const inputSearchKeyword = async (keyword) => {
+  try {
+    await appDataSource.query(
+      `
+        INSERT INTO search_keywords(
+          keyword
+        ) VALUE (?)
+        ON DUPLICATE KEY UPDATE
+        count = count + 1`,
+      [keyword]
+    );
+  } catch (err) {
+    throw new DatabaseError('DATABASE_ERROR');
+  }
+};
+
+const getHotTopics = async () => {
+  try {
+    const [{ hotTopicList }] = await appDataSource.query(`
+      SELECT
+        JSON_ARRAYAGG(keyword) hotTopicList
+      FROM search_keywords
+      ORDER BY count DESC
+      LIMIT 10
+      `);
+
+    return hotTopicList;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError('DATABASE_ERROR');
+  }
+};
+
 module.exports = {
   search,
+  inputSearchKeyword,
+  getHotTopics,
 };
