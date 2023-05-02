@@ -5,7 +5,7 @@ const { DatabaseError } = require('../utils/error');
 const graphQueryBuilder = require('./bidQueryBuilder');
 
 class BidCase {
-  constructor(productId, bidType, bidPrice, dueDate, userId) {
+  constructor(productId, bidType, bidPrice = null, dueDate = null, userId) {
     this.bidType = bidType;
     this.bidPrice = bidPrice;
     this.productId = productId;
@@ -231,6 +231,31 @@ class BidCase {
       throw err;
     } finally {
       await queryRunner.release();
+    }
+  }
+
+  async getBiddingInfo() {
+    try {
+      const [biddingInfo] = await this.appDataSource.query(
+        `
+        SELECT
+          d.id dealId,
+          d.deal_number dealNumber,
+          d.${this.bidType}_commission commission,
+          t.id biddingId,
+          t.bid_price bidPrice,
+          t.due_date dueDate
+        FROM ${this.table} t
+        LEFT JOIN deals d ON t.id = d.${this.bidType}_id
+        WHERE t.user_id = ? AND t.product_id = ?
+        ORDER BY t.updated_at DESC
+        LIMIT 1`,
+        [this.userId, this.productId]
+      );
+      return biddingInfo;
+    } catch (err) {
+      console.log(err);
+      throw new DatabaseError('DATABASE_ERROR');
     }
   }
 }

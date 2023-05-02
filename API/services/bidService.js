@@ -30,28 +30,36 @@ const infoByproductId = async (productId) => {
 
 const inputBidPrice = async (productId, bidType, bidPrice, dueDate, userId) => {
   const bidCase = new BidCase(productId, bidType, bidPrice, dueDate, userId);
-  await bidCase.biddingIn();
+  return await bidCase.biddingIn();
+};
 
+const getBiddingInfo = async (productId, bidType, userId) => {
   const { productName, modelNumber, imageUrl } = await productDao.productDetail(
     productId
   );
-  const inputResult = {
-    dealId: (bidCase.dealInfo && bidCase.dealInfo.id) || null,
-    dealNumber: (bidCase.dealInfo && bidCase.dealInfo.dealNumber) || null,
-    commission: bidCase.commissionRate * bidCase.bidPrice,
+
+  const bidCase = new BidCase(productId, bidType, '', '', userId);
+
+  const biddingInfo = await bidCase.getBiddingInfo();
+
+  const result = {
+    dealId: biddingInfo.dealId,
+    dealNumber: biddingInfo.dealNumber,
+    biddingId: biddingInfo.biddingId,
+    bidPrice: biddingInfo.bidPrice,
+    commission: biddingInfo.bidPrice * bidCase.commissionRate,
+    dueDate: biddingInfo.dueDate,
     productName: productName,
     modelNumber: modelNumber,
     imageUrl: imageUrl,
-    dueDate: dueDate,
-    bidPrice: bidCase.bidPrice,
-    biddingId: bidCase.biddingId,
   };
 
-  return inputResult;
+  return result;
 };
 
 module.exports = {
   graphByTerm,
   infoByproductId,
   inputBidPrice,
+  getBiddingInfo,
 };
