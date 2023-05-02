@@ -35,19 +35,31 @@ const inputBidPrice = catchAsync(async (req, res) => {
   }
 
   const userId = req.user.id;
-  const inputResult = await bidService.inputBidPrice(
+  await bidService.inputBidPrice(productId, bidType, bidPrice, dueDate, userId);
+
+  res.status(201).json({ message: 'BIDDING_IN_SUCCESS' });
+});
+
+const getBiddingInfo = catchAsync(async (req, res) => {
+  const { productId } = req.params;
+  const { bidtype: bidType } = req.query;
+
+  const userId = req.user.id;
+
+  if (!productId || !bidType) throw new BaseError('KEY_ERROR', 400);
+
+  const biddingInfo = await bidService.getBiddingInfo(
     productId,
     bidType,
-    bidPrice,
-    dueDate,
     userId
   );
 
-  res.status(201).json(inputResult);
+  res.status(200).json(biddingInfo);
 });
 
 module.exports = {
   graphByTerm,
   infoByproductId,
   inputBidPrice,
+  getBiddingInfo,
 };
