@@ -2,12 +2,12 @@ const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../utils/error');
 const { dealStatusEnum } = require('./enum');
 
-const buyBiding = async (userId, biddingId) => {
+const buyBidding = async (userId, biddingId) => {
   try {
     return await appDataSource.query(
       `SELECT
       pi.url AS productImage,
-      b.bid_price AS totalAmount,
+      b.bid_price AS bidPrice,
       DATE_FORMAT(b.due_date, '%Y-%m-%d') AS dueDate
       FROM buyings b
       JOIN product_images pi ON pi.product_id = b.product_id 
@@ -50,10 +50,11 @@ const createBuyPayment = async (dealNumber) => {
     WHERE deal_number = ? `,
       [paymentDone, dealNumber]
     );
+
     const payment = await queryRunner.query(
       `
     SELECT
-    pi.url AS url,
+    pi.url AS productImage,
     d.buying_commission AS commission,
     s.bid_price AS bidPrice
     FROM product_images pi
@@ -77,4 +78,4 @@ const createBuyPayment = async (dealNumber) => {
   }
 };
 
-module.exports = { createBuyPayment, buyBiding, buyingAddress };
+module.exports = { createBuyPayment, buyBidding, buyingAddress };

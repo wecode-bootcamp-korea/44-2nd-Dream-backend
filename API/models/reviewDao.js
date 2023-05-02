@@ -3,27 +3,6 @@ const { DatabaseError } = require('../utils/error');
 const { bidStatusEnum } = require('./enum');
 const { query } = require('express');
 
-const checkBuyed = async (userId, productId) => {
-  try {
-    const deal = bidStatusEnum.deal;
-
-    const [id] = await appDataSource.query(
-      `
-    SELECT
-    id
-    FROM buyings
-    WHERE user_id = ?
-    AND product_id = ?
-    AND bid_status_id = ?`,
-      [userId, productId, deal]
-    );
-
-    return id;
-  } catch (err) {
-    throw new DatabaseError('DataSource_Error');
-  }
-};
-
 const getReviewByProductId = async (productId) => {
   try {
     const getReview = await appDataSource.query(
@@ -72,7 +51,7 @@ const createReview = async (userId, productId, content, title, url) => {
         VALUES(?,?)`,
       [reviewId.insertId, url]
     );
-
+    await queryRunner.commitTransaction();
     return reviewId.insertId;
   } catch (err) {
     await queryRunner.rollbackTransaction();
@@ -151,7 +130,6 @@ const verificationReviewId = async (reviewId) => {
 
 module.exports = {
   createReview,
-  checkBuyed,
   getReviewByProductId,
   deleteReview,
   updateReview,

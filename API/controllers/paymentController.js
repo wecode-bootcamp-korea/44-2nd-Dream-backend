@@ -4,9 +4,11 @@ const { catchAsync, BaseError } = require('../utils/error');
 const createBuyPayment = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { addressId, dealNumber, biddingId } = req.body;
+
   if (!addressId || !dealNumber || !biddingId) {
     throw new BaseError('KEY_ERROR', 400);
   }
+
   const createPayment = await paymentService.createBuyPayment(
     addressId,
     userId,
@@ -16,21 +18,23 @@ const createBuyPayment = catchAsync(async (req, res) => {
 
   return res.status(200).json(createPayment);
 });
-const buyBiding = catchAsync(async (req, res) => {
+
+const buyBidding = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { addressId, biddingId } = req.body;
+
   if (!addressId || !biddingId) {
     throw new BaseError('KEY_ERROR', 400);
   }
-  const buyBiding = await paymentService.buyBiding(
+  const buyBidding = await paymentService.buyBidding(
     addressId,
     userId,
     biddingId
   );
-  return res.status(200).json(buyBiding);
+  return res.status(200).json(buyBidding);
 });
 
 module.exports = {
   createBuyPayment,
-  buyBiding,
+  buyBidding,
 };
