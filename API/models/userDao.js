@@ -95,10 +95,90 @@ const addressByUserId = async (userId) => {
   );
 };
 
+const inputNewAccount = async (accountNumber, userId) => {
+  try {
+    const insertInfo = await appDataSource.query(
+      `
+    INSERT INTO account_numbers (
+      user_id,
+      account_number
+    )
+    VALUES (?, ?)
+    `,
+      [userId, accountNumber]
+    );
+    return insertInfo.insertId;
+  } catch {
+    throw new DatabaseError('DataSource_Error', 400);
+  }
+};
+
+const inputNewCard = async (cardNumber, userId) => {
+  try {
+    const insertInfo = await appDataSource.query(
+      `
+      INSERT INTO card_numbers (
+        user_id,
+        card_number
+      )
+      VALUES (?, ?)
+    `,
+      [userId, cardNumber]
+    );
+    return insertInfo.insertId;
+  } catch {
+    throw new DatabaseError('DataSource_Error', 400);
+  }
+};
+
+const getAccountListByUser = async (userId) => {
+  try {
+    const accountList = await appDataSource.query(
+      `
+      SELECT
+        id accountId,
+        account_number accountNumber
+      FROM account_numbers
+      WHERE user_id = ?
+      ORDER BY id DESC
+      `,
+      [userId]
+    );
+
+    return accountList;
+  } catch {
+    throw new DatabaseError('DataSource_Error', 400);
+  }
+};
+
+const getCardListByUser = async (userId) => {
+  try {
+    const cardList = await appDataSource.query(
+      `
+      SELECT
+        id cardId,
+        card_number cardNumber
+      FROM card_numbers
+      WHERE user_id = ?
+      ORDER BY id DESC
+      `,
+      [userId]
+    );
+
+    return cardList;
+  } catch {
+    throw new DatabaseError('DataSource_Error', 400);
+  }
+};
+
 module.exports = {
   getUserByKakaoId,
   getUserById,
   createUser,
   inputAddress,
   addressByUserId,
+  inputNewAccount,
+  inputNewCard,
+  getAccountListByUser,
+  getCardListByUser,
 };
