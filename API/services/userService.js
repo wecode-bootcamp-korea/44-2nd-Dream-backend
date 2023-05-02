@@ -27,6 +27,7 @@ const signInKakao = async (kakaoToken) => {
   }
 
   const payLoad = { id: user.id };
+
   const accessToken = jwt.sign(payLoad, process.env.SECRET_KEY);
   const name = user.nickname;
   return { accessToken: accessToken, nickname: name };

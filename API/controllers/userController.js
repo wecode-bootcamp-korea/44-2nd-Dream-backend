@@ -21,9 +21,11 @@ const getUserById = catchAsync(async (req, res) => {
 const inputAddress = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { address, detail_address, receiver } = req.body;
+
   if (!address || !detail_address || !receiver) {
     throw new BaseError('KEY_ERROR', 400);
   }
+
   const addressId = await userService.inputAddress(
     userId,
     address,

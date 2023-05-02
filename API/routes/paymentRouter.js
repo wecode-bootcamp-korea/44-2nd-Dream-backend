@@ -5,7 +5,7 @@ const checkLogInToken = require('../utils/auth');
 const router = express.Router();
 
 router.post('/buying', checkLogInToken, paymentController.createBuyPayment);
-router.post('/Biding/buying', checkLogInToken, paymentController.buyBiding);
+router.post('/Biding/buying', checkLogInToken, paymentController.buyBidding);
 module.exports = {
   router,
 };

@@ -6,7 +6,6 @@ const router = express.Router();
 router.get('', productController.getProductList);
 router.get('/like', checkLogInToken, productController.productByLike);
 router.get('/:productId', productController.getProductDetail);
-router.get('', productController.getProductList);
 
 module.exports = {
   router,
