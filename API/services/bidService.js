@@ -24,9 +24,6 @@ const graphByTerm = async (productId, term) => {
 const infoByproductId = async (productId) => {
   const { sellings, buyings } = await bidDao.bidInfo(productId);
 
-  if (sellings.length == 0 || buyings.length == 0)
-    throw new BaseError('NOT_SELLINGS_DUYINGS_DATA', 404);
-
   const deal = await bidDao.dealInfo(productId);
   return { selling: sellings, buying: buyings, deal: deal };
 };
