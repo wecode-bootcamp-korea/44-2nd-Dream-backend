@@ -47,15 +47,15 @@ const inputSearchKeyword = async (keyword) => {
 
 const getHotTopics = async () => {
   try {
-    const [{ hotTopicList }] = await appDataSource.query(`
+    const hotTopicList = await appDataSource.query(`
       SELECT
-        JSON_ARRAYAGG(keyword) hotTopicList
+        keyword
       FROM search_keywords
       ORDER BY count DESC
       LIMIT 10
       `);
 
-    return hotTopicList;
+    return hotTopicList.map((data) => data.keyword);
   } catch (err) {
     throw new DatabaseError('DATABASE_ERROR');
   }
