@@ -103,7 +103,8 @@ const createSellPayment = async (
   dealNumber,
   cardNumberId,
   accountNumberId,
-  userId
+  userId,
+  biddingId
 ) => {
   const queryRunner = appDataSource.createQueryRunner();
 
@@ -111,24 +112,24 @@ const createSellPayment = async (
   await queryRunner.startTransaction();
 
   try {
-    const paymentDone = dealStatusEnum.paymentDone;
+    const paymentAwait = dealStatusEnum.paymentAwait;
 
     await queryRunner.query(
       `
       UPDATE sellings
       SET card_number_Id = ?
-      WHERE user_id = ?
+      WHERE id = ? AND user_id = ?
       `,
-      [cardNumberId, userId]
+      [cardNumberId, biddingId, userId]
     );
 
     await queryRunner.query(
       `
       UPDATE sellings
       SET account_number_Id = ?
-      WHERE user_id = ?
+      WHERE id = ? AND user_id = ?
       `,
-      [accountNumberId, userId]
+      [accountNumberId, biddingId, userId]
     );
 
     await queryRunner.query(
@@ -137,7 +138,7 @@ const createSellPayment = async (
       SET deal_status_id = ?
       WHERE deal_number = ?
       `,
-      [paymentDone, dealNumber]
+      [paymentAwait, dealNumber]
     );
 
     const sellPayment = await queryRunner.query(
