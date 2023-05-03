@@ -179,6 +179,8 @@ const productByLike = async (userId) => {
 
     let productIdstr = productId.join();
 
+    if (!productIdstr) return '';
+
     return await appDataSource.query(
       `SELECT
       products.id as productId,
