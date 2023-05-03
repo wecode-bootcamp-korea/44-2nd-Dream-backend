@@ -163,24 +163,6 @@ const productByLike = async (userId) => {
   try {
     const bid = bidStatusEnum.bid;
 
-    const productList = await appDataSource.query(
-      `SELECT
-      product_id
-      FROM likes
-      WHERE user_id = ${userId}
-      `
-    );
-
-    let productId = [];
-
-    await productList.forEach((i) => {
-      productId.push(i.product_id);
-    });
-
-    let productIdstr = productId.join();
-
-    if (!productIdstr) return '';
-
     return await appDataSource.query(
       `SELECT
       products.id as productId,
@@ -190,17 +172,19 @@ const productByLike = async (userId) => {
       product_images.url  as productImage,
       buyings.immediateSalePrice
       FROM products
+      JOIN likes l ON l.product_id = products.id
       LEFT JOIN categories ON products.category_id = categories.id
       LEFT JOIN product_images ON products.id = product_images.product_id
       LEFT JOIN (SELECT
       b.product_id,
       MAX(bid_price) AS immediateSalePrice
       FROM buyings b
-      WHERE b.bid_status_id = ${bid}
+      WHERE b.bid_status_id = ?
       GROUP BY b.product_id) AS buyings
       ON products.id = buyings.product_id
-      WHERE products.id IN (${productIdstr})
-    `
+      WHERE l.user_id = ?
+    `,
+      [bid, userId]
     );
   } catch (err) {
     console.log(err);
