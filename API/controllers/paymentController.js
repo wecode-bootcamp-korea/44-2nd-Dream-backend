@@ -70,7 +70,7 @@ const createSellBidding = catchAsync(async (req, res) => {
     biddingId
   );
 
-  return res.status(201).json(createSellBidding);
+  return res.status(200).json(createSellBidding);
 });
 
 module.exports = {
