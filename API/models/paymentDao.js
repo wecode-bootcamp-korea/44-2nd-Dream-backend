@@ -22,7 +22,7 @@ const buyBidding = async (userId, biddingId) => {
 
 const buyingAddress = async (addressId, userId, biddingId) => {
   try {
-    await appDataSource.query(
+    return await appDataSource.query(
       `
     UPDATE buyings
     SET address_id = ?
@@ -54,7 +54,6 @@ const getSellBidding = async (userId, biddingId) => {
       [biddingId, userId]
     );
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('DATABASE_ERROR');
   }
 };
@@ -69,8 +68,9 @@ const updateSellbiddingInfo = async (
 
   await queryRunner.connect();
   await queryRunner.startTransaction();
+
   try {
-    const createOrderTable = await queryRunner.query(
+    await queryRunner.query(
       `
       UPDATE sellings
       SET card_number_id = ?
@@ -106,9 +106,10 @@ const createSellPayment = async (
   userId
 ) => {
   const queryRunner = appDataSource.createQueryRunner();
-  await queryRunner.connect();
 
+  await queryRunner.connect();
   await queryRunner.startTransaction();
+
   try {
     const paymentDone = dealStatusEnum.paymentDone;
 
@@ -154,6 +155,9 @@ const createSellPayment = async (
     `,
       [dealNumber]
     );
+
+    await queryRunner.commitTransaction();
+
     return sellPayment;
   } catch (err) {
     await queryRunner.rollbackTransaction();
@@ -165,9 +169,10 @@ const createSellPayment = async (
 
 const createBuyPayment = async (dealNumber) => {
   const queryRunner = appDataSource.createQueryRunner();
-  await queryRunner.connect();
 
+  await queryRunner.connect();
   await queryRunner.startTransaction();
+
   try {
     const paymentDone = dealStatusEnum.paymentDone;
 

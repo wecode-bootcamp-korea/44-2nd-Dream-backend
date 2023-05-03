@@ -36,10 +36,11 @@ const inputAddress = catchAsync(async (req, res) => {
   return res.status(201).json({ addressId: addressId });
 });
 
-const addressByUserId = catchAsync(async (req, res) => {
+const getAddressByUserId = catchAsync(async (req, res) => {
   const userId = req.user.id;
 
-  const addresses = await userService.addressByUserId(userId);
+  const addresses = await userService.getAddressByUserId(userId);
+
   return res.status(200).json(addresses);
 });
 
@@ -50,6 +51,7 @@ const inputNewAccount = catchAsync(async (req, res) => {
 
   const userId = req.user.id;
   const newAccountId = await userService.inputNewCard(accountNumber, userId);
+
   return res.status(201).json({ accountId: newAccountId });
 });
 
@@ -60,18 +62,21 @@ const inputNewCard = catchAsync(async (req, res) => {
 
   const userId = req.user.id;
   const newCardId = await userService.inputNewCard(cardNumber, userId);
+
   return res.status(201).json({ cardId: newCardId });
 });
 
 const getAccountListByUser = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const accountList = await userService.getAccountListByUser(userId);
+
   return res.status(200).json(accountList);
 });
 
 const getCardListByUser = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const cardList = await userService.getCardListByUser(userId);
+
   return res.status(200).json(cardList);
 });
 
@@ -82,6 +87,6 @@ module.exports = {
   inputNewCard,
   getAccountListByUser,
   getCardListByUser,
-  addressByUserId,
+  getAddressByUserId,
   inputAddress,
 };

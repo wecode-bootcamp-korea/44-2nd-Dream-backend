@@ -37,8 +37,8 @@ const getUserById = async (userId) => {
   return await userDao.getUserById(userId);
 };
 
-const addressByUserId = async (userId) => {
-  return await userDao.addressByUserId(userId);
+const getAddressByUserId = async (userId) => {
+  return await userDao.getAddressByUserId(userId);
 };
 
 const inputAddress = async (userId, address, detail_address, receiver) => {
@@ -75,5 +75,5 @@ module.exports = {
   getAccountListByUser,
   getCardListByUser,
   inputAddress,
-  addressByUserId,
+  getAddressByUserId,
 };

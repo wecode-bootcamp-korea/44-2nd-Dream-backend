@@ -14,11 +14,13 @@ const startSever = async () => {
       console.error('Error during Data Source initialization', err);
       appDataSource.destroy();
     });
+
   job;
+
   const PORT = process.env.PORT || 3000;
 
   app.listen(PORT, () => {
-    console.log(`Listening to request on 127.0.0.1:${PORT}`);
+    console.log(`Listening to request on port ${PORT}`);
   });
 };
 

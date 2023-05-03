@@ -25,8 +25,10 @@ const getProductDetail = async (productId) => {
 
   return productDetail;
 };
-const productByLike = async (userId) => {
-  const productList = await productDao.productByLike(userId);
+
+const getProductByLike = async (userId) => {
+  const productList = await productDao.getProductByLike(userId);
+
   return productList;
 };
 
@@ -53,5 +55,5 @@ const getProductList = async (
 module.exports = {
   getProductList,
   getProductDetail,
-  productByLike,
+  getProductByLike,
 };

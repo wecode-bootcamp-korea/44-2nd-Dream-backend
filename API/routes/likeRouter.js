@@ -1,6 +1,6 @@
 const express = require('express');
-const likeController = require('../controllers/likeController');
 const checkLogInToken = require('../utils/auth');
+const likeController = require('../controllers/likeController');
 
 const router = express.Router();
 

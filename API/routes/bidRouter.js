@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.get('/graph/:productId', bidController.graphByTerm);
 router.get('/info/:productId', bidController.infoByproductId);
+router.post('/input', checkLogInToken, bidController.inputBidPrice);
 router.get(
   '/biddingin/:productId',
   checkLogInToken,
   bidController.getBiddingInfo
 );
-router.post('/input', checkLogInToken, bidController.inputBidPrice);
 
 module.exports = {
   router,

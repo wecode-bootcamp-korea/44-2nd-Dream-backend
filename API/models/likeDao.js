@@ -11,11 +11,12 @@ const isLike = async (proudctId, userId) => {
       AND user_id = ?`,
       [proudctId, userId]
     );
+
     if (!isLike) return false;
 
     return true;
   } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -29,11 +30,13 @@ const createLike = async (proudctId, userId) => {
       `,
       [proudctId, userId]
     );
+
     return createLike;
   } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
+
 const deleteLike = async (proudctId, userId) => {
   try {
     const deleteLike = await appDataSource.query(
@@ -43,9 +46,10 @@ const deleteLike = async (proudctId, userId) => {
         `,
       [proudctId, userId]
     );
+
     return deleteLike;
   } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 

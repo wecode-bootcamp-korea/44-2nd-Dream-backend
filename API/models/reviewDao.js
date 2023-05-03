@@ -4,7 +4,7 @@ const { bidStatusEnum } = require('./enum');
 
 const getReviewByProductId = async (productId) => {
   try {
-    const getReview = await appDataSource.query(
+    return await appDataSource.query(
       `
       SELECT
         u.nickname AS userNickname,
@@ -19,17 +19,17 @@ const getReviewByProductId = async (productId) => {
       WHERE r.product_id = ${productId}
       `
     );
-    return getReview;
   } catch (err) {
-    throw new DatabaseError('DataSource_Error');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
 const createReview = async (userId, productId, content, title, url) => {
   const queryRunner = appDataSource.createQueryRunner();
-  await queryRunner.connect();
 
+  await queryRunner.connect();
   await queryRunner.startTransaction();
+
   try {
     const reviewId = await queryRunner.query(
       `
@@ -50,11 +50,12 @@ const createReview = async (userId, productId, content, title, url) => {
         VALUES(?,?)`,
       [reviewId.insertId, url]
     );
+
     await queryRunner.commitTransaction();
     return reviewId.insertId;
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    throw new DatabaseError('DataSource_Error');
+    throw new DatabaseError('DATABASE_ERROR');
   } finally {
     await queryRunner.release();
   }
@@ -65,6 +66,7 @@ const deleteReview = async (reviewId) => {
 
   await queryRunner.connect();
   await queryRunner.startTransaction();
+
   try {
     await queryRunner.query(
       `
@@ -82,9 +84,11 @@ const deleteReview = async (reviewId) => {
       [reviewId]
     );
     await queryRunner.commitTransaction();
+
+    return;
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    throw new DatabaseError('DataSource_Error');
+    throw new DatabaseError('DATABASE_ERROR');
   } finally {
     await queryRunner.release();
   }
@@ -92,7 +96,7 @@ const deleteReview = async (reviewId) => {
 
 const updateReview = async (userId, reviewId, title, content, url) => {
   try {
-    await appDataSource.query(
+    return await appDataSource.query(
       `UPDATE reviews
         LEFT JOIN review_images ON (reviews.id = review_images.review_id)
           SET 
@@ -104,7 +108,7 @@ const updateReview = async (userId, reviewId, title, content, url) => {
       [title, content, url, userId, reviewId]
     );
   } catch (err) {
-    throw new DatabaseError(400, 'Database Error');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -123,7 +127,7 @@ const verificationReviewId = async (reviewId) => {
     );
     return !!parseInt(result.existing);
   } catch {
-    throw new DatabaseError(500, 'DatabaseError');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 

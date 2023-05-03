@@ -3,7 +3,9 @@ const { catchAsync } = require('../utils/error');
 
 const getProductDetail = catchAsync(async (req, res) => {
   const { productId } = req.params;
+
   const productDetail = await productService.getProductDetail(productId);
+
   return res.status(200).json(productDetail);
 });
 
@@ -31,12 +33,12 @@ const getProductList = catchAsync(async (req, res) => {
   return res.status(200).json(products);
 });
 
-const productByLike = catchAsync(async (req, res) => {
+const getProductByLike = catchAsync(async (req, res) => {
   const userId = req.user.id;
 
   if (!userId) return new BaseError('YOU_NOT_INVALID', 401);
 
-  const data = await productService.productByLike(userId);
+  const data = await productService.getProductByLike(userId);
 
   return res.status(200).json(data);
 });
@@ -44,7 +46,7 @@ const productByLike = catchAsync(async (req, res) => {
 module.exports = {
   getProductDetail,
   getProductList,
-  productByLike,
+  getProductByLike,
   getProductDetail,
-  getProductList,  
+  getProductList,
 };

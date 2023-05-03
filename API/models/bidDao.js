@@ -27,7 +27,11 @@ class BidCase {
         SELECT 
             bid_price bidPrice
         FROM ${table}
-        WHERE bid_price = (SELECT ${minOrMax}(bid_price) FROM ${table} WHERE bid_status_id = ${bidStatusEnum.bid} AND product_id = ${productIdValue}) 
+        WHERE bid_price = (
+          SELECT ${minOrMax}(bid_price) 
+          FROM ${table} 
+          WHERE bid_status_id = ${bidStatusEnum.bid} 
+          AND product_id = ${productIdValue}) 
         `
       );
 
@@ -37,9 +41,7 @@ class BidCase {
 
       return parseFloat(Object.values(bidPrice));
     } catch (err) {
-      err.message = 'DATABASE_ERROR';
-      err.statusCode = 400;
-      throw err;
+      throw new DatabaseError('DATABASE_ERROR');
     }
   }
 
@@ -68,7 +70,10 @@ class BidCase {
             FROM deals d
             JOIN buyings b ON b.id = d.buying_id
             WHERE d.created_at = 
-            (SELECT max(d.created_at) FROM deals JOIN buyings b ON b.id = d.buying_id WHERE b.product_id = ${this.productId}) 
+            (SELECT max(d.created_at) 
+            FROM deals 
+            JOIN buyings b ON b.id = d.buying_id 
+            WHERE b.product_id = ${this.productId}) 
             AND b.product_id = ${this.productId}
             ORDER BY d.created_at DESC
             `
@@ -80,10 +85,7 @@ class BidCase {
 
       return parseFloat(Object.values(bidPrice));
     } catch (err) {
-      console.log(err);
-      err.message = 'DATABASE_ERROR';
-      err.statusCode = 400;
-      throw err;
+      throw new DatabaseError('DATABASE_ERROR');
     }
   }
 
@@ -95,8 +97,10 @@ class BidCase {
         (this.bidType == 'selling' && this.bidPrice - nowPrice <= 0))
     ) {
       this.bidPrice = nowPrice;
+
       return this.bidPrice;
     }
+
     return false;
   }
 
@@ -107,15 +111,15 @@ class BidCase {
             SELECT
             id
             FROM ${this.table}
-            WHERE user_id = ${this.userId} AND product_id = ${this.productId} AND bid_status_id = ${bidStatusEnum.bid}
+            WHERE user_id = ${this.userId} 
+            AND product_id = ${this.productId} 
+            AND bid_status_id = ${bidStatusEnum.bid}
             ) existing 
             `
       );
       return !!parseInt(result.existing);
     } catch (err) {
-      err.message = 'DATABASE_ERROR';
-      err.statusCode = 400;
-      throw err;
+      throw new DatabaseError('DATABASE_ERROR');
     }
   }
 
@@ -130,7 +134,9 @@ class BidCase {
           `UPDATE ${this.table}
         SET bid_price = ?,
             due_date = ?
-        WHERE user_id = ? AND product_id = ? AND bid_status_id = ?`,
+        WHERE user_id = ? 
+        AND product_id = ? 
+        AND bid_status_id = ?`,
           [
             this.bidPrice,
             this.dueDate,
@@ -144,7 +150,9 @@ class BidCase {
           `SELECT
             id
         FROM ${this.table}
-        WHERE user_id = ${this.userId} AND product_id = ${this.productId} AND bid_status_id = ${bidStatusEnum.bid}
+        WHERE user_id = ${this.userId} 
+        AND product_id = ${this.productId} 
+        AND bid_status_id = ${bidStatusEnum.bid}
         `
         );
         this.biddingId = bidding.id;
@@ -177,15 +185,17 @@ class BidCase {
         (SELECT 
             min(updated_at)
         FROM ${this.counterTable}
-        WHERE product_id = ${this.productId} AND bid_price = ${this.bidPrice} AND bid_status_id = ${bidStatusEnum.bid})
-        AND product_id = ${this.productId} AND bid_price = ${this.bidPrice} AND bid_status_id = ${bidStatusEnum.bid}
+        WHERE product_id = ${this.productId} 
+        AND bid_price = ${this.bidPrice} 
+        AND bid_status_id = ${bidStatusEnum.bid})
+        AND product_id = ${this.productId} 
+        AND bid_price = ${this.bidPrice} 
+        AND bid_status_id = ${bidStatusEnum.bid}
         ORDER BY updated_at`
       );
 
       if (partner.userId == this.userId) {
-        const err = new Error('SAME_USER_WITH_COUNTERPART');
-        err.statusCode = 400;
-        throw err;
+        throw new DatabaseError('SAME_USER_WITH_COUNTERPART');
       }
 
       await queryRunner.query(
@@ -193,7 +203,8 @@ class BidCase {
         JOIN ${this.counterTable} c
         SET t.bid_status_id = ${bidStatusEnum.deal},
             c.bid_status_id = ${bidStatusEnum.deal}
-        WHERE t.id = ${this.biddingId} AND c.id = ${partner.id}`
+        WHERE t.id = ${this.biddingId} 
+        AND c.id = ${partner.id}`
       );
 
       const dealInput = await queryRunner.query(
@@ -223,6 +234,7 @@ class BidCase {
       );
 
       await queryRunner.commitTransaction();
+
       return;
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -247,14 +259,14 @@ class BidCase {
           t.due_date dueDate
         FROM ${this.table} t
         LEFT JOIN deals d ON t.id = d.${this.bidType}_id
-        WHERE t.user_id = ? AND t.product_id = ?
+        WHERE t.user_id = ? 
+        AND t.product_id = ?
         ORDER BY t.updated_at DESC
         LIMIT 1`,
         [this.userId, this.productId]
       );
       return biddingInfo;
     } catch (err) {
-      console.log(err);
       throw new DatabaseError('DATABASE_ERROR');
     }
   }
@@ -280,10 +292,10 @@ const graphByTerm = async (productId, term) => {
     );
     return data;
   } catch (err) {
-    console.log(err);
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
+
 const bidInfo = async (productId, tableChange = 1) => {
   try {
     let buyingcondition = new graphQueryBuilder(
@@ -316,7 +328,7 @@ const bidInfo = async (productId, tableChange = 1) => {
 
     return { buyings: buyings, sellings: sellings };
   } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -335,9 +347,10 @@ const dealInfo = async (productId) => {
   `
     );
   } catch (err) {
-    throw new DatabaseError('INVALID_DATA_INPUT');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
+
 module.exports = {
   graphByTerm,
   dealInfo,
