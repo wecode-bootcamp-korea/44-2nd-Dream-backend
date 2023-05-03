@@ -80,7 +80,7 @@ const inputAddress = async (userId, address, detail_address, receiver) => {
   return inputAddress.insertId;
 };
 
-const addressByUserId = async (userId) => {
+const getAddressByUserId = async (userId) => {
   return await appDataSource.query(
     `
   SELECT
@@ -176,7 +176,7 @@ module.exports = {
   getUserById,
   createUser,
   inputAddress,
-  addressByUserId,
+  getAddressByUserId,
   inputNewAccount,
   inputNewCard,
   getAccountListByUser,

@@ -9,6 +9,7 @@ const createReview = async (userId, productId, content, title, url) => {
     title,
     url
   );
+
   return createReview;
 };
 

@@ -1,9 +1,8 @@
 const schedule = require('node-schedule');
 const appDataSource = require('../models/appDataSource');
 const { bidStatusEnum } = require('../models/enum');
-const { BaseError } = require('./error');
 
-const job = schedule.scheduleJob('1 * * * * *', async () => {
+const job = schedule.scheduleJob('00 06 * * *', async () => {
   const bidStatus = bidStatusEnum.bid;
   const failStatus = bidStatusEnum.fail;
 
@@ -17,7 +16,6 @@ const job = schedule.scheduleJob('1 * * * * *', async () => {
   );
 
   if (sellingId.length != 0) {
-    sellingId = Array.isArray(sellingId) ? sellingId : [sellingId];
     let sellingProductId = [];
     let sellingUserId = [];
 
@@ -50,7 +48,6 @@ const job = schedule.scheduleJob('1 * * * * *', async () => {
   );
 
   if (buyingId.length != 0) {
-    buyingId = Array.isArray(buyingId) ? buyingId : [buyingId];
     const buyingProductId = [];
     const buyingUserId = [];
 

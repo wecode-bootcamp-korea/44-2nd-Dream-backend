@@ -3,7 +3,6 @@ const { catchAsync, BaseError } = require('../utils/error');
 
 const graphByTerm = catchAsync(async (req, res) => {
   const { productId } = req.params;
-
   const { term } = req.query;
 
   const data = await bidService.graphByTerm(productId, term);
@@ -29,15 +28,14 @@ const inputBidPrice = catchAsync(async (req, res) => {
     !dueDate ||
     !(bidType == 'buying' || bidType == 'selling')
   ) {
-    const error = new Error('KEY ERROR');
-    error.statusCode = 400;
-    throw error;
+    throw new BaseError('KEY_ERROR', 400);
   }
 
   const userId = req.user.id;
+
   await bidService.inputBidPrice(productId, bidType, bidPrice, dueDate, userId);
 
-  res.status(201).json({ message: 'BIDDING_IN_SUCCESS' });
+  return res.status(201).json({ message: 'BIDDING_IN_SUCCESS' });
 });
 
 const getBiddingInfo = catchAsync(async (req, res) => {
@@ -54,7 +52,7 @@ const getBiddingInfo = catchAsync(async (req, res) => {
     userId
   );
 
-  res.status(200).json(biddingInfo);
+  return res.status(200).json(biddingInfo);
 });
 
 module.exports = {

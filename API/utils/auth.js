@@ -8,8 +8,7 @@ const checkLogInToken = async (req, res, next) => {
     const secretKey = process.env.SECRET_KEY;
 
     if (!accessToken) {
-      const error = new Error('NEED_ACCESS_TOKEN');
-      error.statusCode = 401;
+      const error = new BaseError('NEED_ACCESS_TOKEN', 401);
       return res.status(error.statusCode).json({ message: error.message });
     }
 
@@ -18,8 +17,7 @@ const checkLogInToken = async (req, res, next) => {
     const user = await userDao.getUserById(decoded.id);
 
     if (!user) {
-      const error = new Error('INVALID_USER');
-      error.statusCode = 401;
+      const error = new BaseError('INVALID_USER', 401);
       return res.status(error.statusCode).json({ message: error.message });
     }
 

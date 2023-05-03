@@ -1,17 +1,17 @@
 const express = require('express');
-const paymentController = require('../controllers/paymentController');
 const checkLogInToken = require('../utils/auth');
+const paymentController = require('../controllers/paymentController');
 
 const router = express.Router();
 
-router.post('/buying', checkLogInToken, paymentController.createBuyPayment);
-router.post('/Biding/buying', checkLogInToken, paymentController.buyBidding);
-router.post('/selling', checkLogInToken, paymentController.createSellPayment);
+router.post('/bidding/buying', checkLogInToken, paymentController.buyBidding);
 router.post(
-  '/Bidding/Selling',
+  '/bidding/selling',
   checkLogInToken,
   paymentController.createSellBidding
 );
+router.post('/buying', checkLogInToken, paymentController.createBuyPayment);
+router.post('/selling', checkLogInToken, paymentController.createSellPayment);
 
 module.exports = {
   router,

@@ -16,7 +16,7 @@ const createBuyPayment = catchAsync(async (req, res) => {
     dealNumber
   );
 
-  return res.status(200).json(createPayment);
+  return res.status(201).json(createPayment);
 });
 
 const buyBidding = catchAsync(async (req, res) => {
@@ -26,17 +26,23 @@ const buyBidding = catchAsync(async (req, res) => {
   if (!addressId || !biddingId) {
     throw new BaseError('KEY_ERROR', 400);
   }
+
   const buyBidding = await paymentService.buyBidding(
     addressId,
     userId,
     biddingId
   );
+
   return res.status(200).json(buyBidding);
 });
 
 const createSellPayment = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const { dealNumber, cardNumberId, accountNumberId, biddingId } = req.body;
+
+  if (!dealNumber || !cardNumberId || !accountNumberId || !biddingId) {
+    throw new BaseError('KEY_ERROR', 400);
+  }
 
   const createSellPayment = await paymentService.createSellPayment(
     dealNumber,
@@ -56,6 +62,7 @@ const createSellBidding = catchAsync(async (req, res) => {
   if (!cardNumberId || !accountNumberId || !biddingId) {
     throw new BaseError('KEY_ERROR', 400);
   }
+
   const createSellBidding = await paymentService.createSellBidding(
     userId,
     cardNumberId,

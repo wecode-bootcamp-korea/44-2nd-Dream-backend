@@ -11,8 +11,6 @@ const graphByTerm = async (productId, term) => {
   let bidPrice = [];
   let date = [];
 
-  graphData = Array.isArray(graphData) ? graphData : [graphData];
-
   graphData.forEach((data) => {
     bidPrice.push(data.bid_price);
     date.push(data.date);
@@ -25,11 +23,13 @@ const infoByproductId = async (productId) => {
   const { sellings, buyings } = await bidDao.bidInfo(productId);
 
   const deal = await bidDao.dealInfo(productId);
+
   return { selling: sellings, buying: buyings, deal: deal };
 };
 
 const inputBidPrice = async (productId, bidType, bidPrice, dueDate, userId) => {
   const bidCase = new BidCase(productId, bidType, bidPrice, dueDate, userId);
+
   return await bidCase.biddingIn();
 };
 

@@ -25,8 +25,7 @@ const search = async (limit, offset, keyword) => {
       [limit, offset]
     );
   } catch (err) {
-    console.log(err);
-    throw new DatabaseError(500, 'Database Error');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -58,7 +57,6 @@ const getHotTopics = async () => {
 
     return hotTopicList;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError('DATABASE_ERROR');
   }
 };

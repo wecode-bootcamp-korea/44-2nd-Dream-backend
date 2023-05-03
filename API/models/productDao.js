@@ -32,10 +32,7 @@ const productDetail = async (productId) => {
     );
     return productDetail;
   } catch (err) {
-    console.log(err);
-    err.message = 'DATABASE_ERROR';
-    err.statusCode = 400;
-    throw err;
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -53,9 +50,7 @@ const isExistingProduct = async (productId) => {
     );
     return !!parseInt(result.existing);
   } catch (err) {
-    err.message = 'DATABASE_ERROR';
-    err.statusCode = 400;
-    throw err;
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -154,12 +149,11 @@ const getProductList = async (
     );
     return productList;
   } catch (err) {
-    console.log(err);
-    throw new DatabaseError(500, 'DatabaseError');
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
-const productByLike = async (userId) => {
+const getProductByLike = async (userId) => {
   try {
     const bid = bidStatusEnum.bid;
 
@@ -187,10 +181,7 @@ const productByLike = async (userId) => {
       [bid, userId]
     );
   } catch (err) {
-    console.log(err);
-    err.message = 'DATABASE_ERROR';
-    err.statusCode = 400;
-    throw err;
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -198,5 +189,5 @@ module.exports = {
   getProductList,
   productDetail,
   isExistingProduct,
-  productByLike,
+  getProductByLike,
 };
