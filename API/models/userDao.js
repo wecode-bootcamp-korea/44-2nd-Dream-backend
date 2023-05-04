@@ -107,6 +107,7 @@ const inputNewAccount = async (accountNumber, userId) => {
     `,
       [userId, accountNumber]
     );
+    console.log(insertInfo);
     return insertInfo.insertId;
   } catch {
     throw new DatabaseError('DataSource_Error', 400);
@@ -125,6 +126,7 @@ const inputNewCard = async (cardNumber, userId) => {
     `,
       [userId, cardNumber]
     );
+    console.log(insertInfo);
     return insertInfo.insertId;
   } catch {
     throw new DatabaseError('DataSource_Error', 400);

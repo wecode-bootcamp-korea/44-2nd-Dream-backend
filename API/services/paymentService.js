@@ -33,15 +33,15 @@ const buyBidding = async (addressId, userId, biddingId) => {
 };
 
 const createSellBidding = async (
-  userId,
   cardNumberId,
   accountNumberId,
+  userId,
   biddingId
 ) => {
   await paymentDao.updateSellbiddingInfo(
-    userId,
     cardNumberId,
     accountNumberId,
+    userId,
     biddingId
   );
   const [biddingsell] = await paymentDao.getSellBidding(userId, biddingId);

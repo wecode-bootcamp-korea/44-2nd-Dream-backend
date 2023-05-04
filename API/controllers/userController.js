@@ -45,14 +45,16 @@ const getAddressByUserId = catchAsync(async (req, res) => {
 });
 
 const inputNewAccount = catchAsync(async (req, res) => {
-  const { accountNumber } = req.body;
+  const { accountNumber, cardNumber } = req.body;
 
   if (!accountNumber) throw new BaseError('KEY_ERROR', 400);
+  if (!cardNumber) throw new BaseError('KEY_ERROR', 400);
 
   const userId = req.user.id;
-  const newAccountId = await userService.inputNewCard(accountNumber, userId);
+  const newAccountId = await userService.inputNewAccount(accountNumber, userId);
+  const newCardId = await userService.inputNewCard(cardNumber, userId);
 
-  return res.status(201).json({ accountId: newAccountId });
+  return res.status(201).json({ accountId: newAccountId, cardId: newCardId });
 });
 
 const inputNewCard = catchAsync(async (req, res) => {
