@@ -34,6 +34,7 @@
  ## 📍[ERD](https://dbdiagram.io/d/64426bdf6b31947051f9b394)
 ![DREAM (1)](https://user-images.githubusercontent.com/120387100/236399537-f89176d5-fa75-4acc-bda2-b7ef61e5319c.png)
 
+ ## 📍[Postman](https://documenter.getpostman.com/view/26858291/2s93eWzskR)
 
  <br>
  
