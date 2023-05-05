@@ -64,9 +64,9 @@ const createSellBidding = catchAsync(async (req, res) => {
   }
 
   const createSellBidding = await paymentService.createSellBidding(
-    userId,
     cardNumberId,
     accountNumberId,
+    userId,
     biddingId
   );
 

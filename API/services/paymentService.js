@@ -8,20 +8,17 @@ const createBuyPayment = async (addressId, userId, biddingId, dealNumber) => {
 };
 
 const createSellPayment = async (
-  dealNumber,
   cardNumberId,
   accountNumberId,
   userId,
   biddingId
 ) => {
   const [createPayment] = await paymentDao.createSellPayment(
-    dealNumber,
     cardNumberId,
     accountNumberId,
     userId,
     biddingId
   );
-
   return createPayment;
 };
 
