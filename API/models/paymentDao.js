@@ -41,17 +41,15 @@ const getSellBidding = async (userId, biddingId) => {
     return await appDataSource.query(
       `
       SELECT
-        pi.url AS productImage,
-        s.bid_price AS bidPrice,
-        d.selling_commission AS commission,
+      pi.url AS productImage,
+      s.bid_price AS bidPrice,
       DATE_FORMAT(s.due_date, '%Y-%m-%d') dueDate
       FROM sellings s
       JOIN product_images pi ON pi.product_id = s.product_id
-      JOIN deals d ON d.selling_id = s.id
-      WHERE s.id = ?
-      AND user_id = ?
+      WHERE user_id = ?
+      AND s.id = ?
       `,
-      [biddingId, userId]
+      [userId, biddingId]
     );
   } catch (err) {
     throw new DatabaseError('DATABASE_ERROR');
