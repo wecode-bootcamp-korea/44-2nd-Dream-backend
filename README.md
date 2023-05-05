@@ -87,5 +87,8 @@
  
  ### Reviews
  
- ***
+ **CREATE**
+ **READ**
+ **UPDATE**
+ **DELETE**
  
