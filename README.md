@@ -1,7 +1,7 @@
 # 44-2nd-Dream-backend 경매 플랫폼 제작 프로젝트
 
 박세익([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
-장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/52))<br>
+장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/57))<br>
 김민서([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 송석준([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 <br>
