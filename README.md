@@ -32,9 +32,13 @@
 <br>
 
  ## 📍[ERD](https://dbdiagram.io/d/64426bdf6b31947051f9b394)
-![DREAM (1)](https://user-images.githubusercontent.com/120387100/236399537-f89176d5-fa75-4acc-bda2-b7ef61e5319c.png)
+![DREAM (2)](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/2692e70c-a485-408e-9bac-4930c13b88d0)
+
+
 
  ## 📍[Postman](https://documenter.getpostman.com/view/26858291/2s93eWzskR)
+
+<img width="1512" alt="스크린샷 2023-05-18 23 35 50" src="https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/3bff3e11-24d2-495c-81e4-f815da108948">
 
  <br>
  
