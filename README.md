@@ -37,7 +37,7 @@
 
 
  ## 📍[Postman](https://documenter.getpostman.com/view/26858291/2s93eWzskR)
-
+Postman의 Documentation을 프로젝트 진행 시 프론트엔드와의 소통 및 협업 도구로 활용
 <img width="1512" alt="스크린샷 2023-05-18 23 35 50" src="https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/3bff3e11-24d2-495c-81e4-f815da108948">
 
  <br>
