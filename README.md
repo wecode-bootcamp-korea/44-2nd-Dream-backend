@@ -1,7 +1,7 @@
 # 44-2nd-Dream-backend 경매 플랫폼 제작 프로젝트
 
 박세익([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
-장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/))<br>
+장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/52))<br>
 김민서([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 송석준([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 <br>
@@ -13,6 +13,7 @@
   `Backend`: 박세익(Project Manager), 장다희, 김민서, 송석준 <br>
 * [프론트엔드 Github 저장소](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-frontend)
 * 모델링한 사이트: [KREAM](https://kream.co.kr/)
+* [DREAM 결과물 Url]()
 <br>
 
 ## 📍사용 기술
@@ -37,9 +38,9 @@
 
 
  ## 📍[Postman](https://documenter.getpostman.com/view/26858291/2s93eWzskR)
-Postman의 Documentation을 프로젝트 진행 시 프론트엔드와의 소통 및 협업 도구로 활용
-<img width="1512" alt="스크린샷 2023-05-18 23 35 50" src="https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/3bff3e11-24d2-495c-81e4-f815da108948">
 
+<img width="1512" alt="스크린샷 2023-05-18 23 35 50" src="https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/3bff3e11-24d2-495c-81e4-f815da108948"><br>
+Postman의 Documentation을 프로젝트 진행 시 프론트엔드와의 소통 및 협업 도구로 활용
  <br>
  
  ## 핵심 기능
