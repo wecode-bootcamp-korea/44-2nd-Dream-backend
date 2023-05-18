@@ -6,7 +6,8 @@
 송석준([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 <br>
 > **위코드 44기 2차 프로젝트 <br>
-p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p 경매 거래 플랫폼 웹사이트 제작**<br>
+p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p 경매 거래 플랫폼 웹사이트 제작<br>
+[DREAM 결과물 Url]()**
 
 > **짧은 프로젝트 기간동안 개발에 집중해야 하므로 디자인/기획 부분만 클론했습니다.<br>
 개발은 초기 세팅부터 전부 직접 구현했으며, 아래 데모 영상에서 보이는 부분은 모두 백앤드와 연결하여 실제 사용할 수 있는 서비스 수준으로 개발한 것입니다.*
@@ -19,7 +20,7 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
   `Backend`: 박세익(Project Manager), 장다희, 김민서, 송석준 <br>
 * [프론트엔드 Github 저장소](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-frontend)
 * 모델링한 사이트: [KREAM](https://kream.co.kr/)
-* [DREAM 결과물 Url]()
+
 <br>
 
 
