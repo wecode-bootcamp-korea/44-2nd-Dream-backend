@@ -60,6 +60,10 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
  ### Users
  **회원가입**
 
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/acdfa770-73bd-4775-a10a-e924592faed4
+
+
 <br> 
 
  **로그인(Kakao Social Login)**
@@ -88,26 +92,42 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
  
  **구매 입찰**
  
- **즉시 구매**
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/e8887c3d-0b93-4e28-b57c-53c8156b11bd
+
+
+ **즉시 구매*
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0837d058-7d15-4b29-8b2f-5e2a775153c5
+
+*
  
  **판매 입찰**
  
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/8e57fdb7-82eb-4eeb-8f2c-d52bc1164ace
+
+
  **즉시 판매**
  
  ***
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0de776fd-5559-4882-b4da-bff2eea4cd7d
+
+
  
  <br>
  
  ### Search
  
  **상품 검색**
- 
+ **인기상품 검색**
 
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/072f8bfd-b3f0-483a-9115-a07871b613c1
 
 
  
- **인기상품 검색**
+
  
  ***
  
@@ -120,7 +140,12 @@ https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0
  <br>
  
  ### Reviews
- 
+
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/4a612806-8010-4162-8d5b-fa2b8bff27c5
+
+
+
  **CREATE :**
  
  **READ :**
@@ -128,6 +153,15 @@ https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0
  **UPDATE :**
  
  **DELETE :**
+ 
+ 
+  ### EVENT Page : for children 05.05
+  
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/8d8a5811-bf8e-422c-ba0a-edb2e260ff4e
+
+
+ 
  
  ## Reference
 
