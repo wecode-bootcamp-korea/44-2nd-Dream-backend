@@ -102,6 +102,11 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
  
  **상품 검색**
  
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/072f8bfd-b3f0-483a-9115-a07871b613c1
+
+
+ 
  **인기상품 검색**
  
  ***
