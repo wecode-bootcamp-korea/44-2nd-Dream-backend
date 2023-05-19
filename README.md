@@ -2,7 +2,7 @@
 
 박세익([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/57))<br>
-김민서([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
+김민서([**Github**](https://github.com/), [회고록](https://just-process.tistory.com/45/))<br>
 송석준([**Github**](https://github.com/), [회고록](https://walwaldev.tistory.com/))<br>
 <br>
 > **위코드 44기 2차 프로젝트 <br>
