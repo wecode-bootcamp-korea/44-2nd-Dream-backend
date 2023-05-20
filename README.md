@@ -58,39 +58,44 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
  ## 핵심 기능
  
  ### Users
- **회원가입**
- 
- ***
-
+ **회원가입(Kakao Social Login)**
+ **로그인(Kakao Social Login)**
 
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/acdfa770-73bd-4775-a10a-e924592faed4
 
+ : KaKao에서 제공하는 API를 활용하여 user 회원 가입, 로그인 기능 구현
+ <br>
+ ***
+### Products
 
-<br> 
+**상품 리스트 & 필터**
 
- **로그인(Kakao Social Login)**
- 
+![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/f3ea9ebf-8142-414a-9436-07e7f7494f08)
 
- 
- ### Products
-
- **상품 정보** 
+: query parameter로 필터 및 정렬 조건을 전달 받아, 그에 따라 상품 리스트를 응답하는 API
+-  좋아요 많은 순, 즉시 구매가 순, 즉시 판매가 순, 리뷰 순, 프리미엄 가격 순으로 정렬 가능
+-  상품 카테고리, 사용 연령, 난이도로 필터 가능 
 
 <br>
 
-**상품 검색**
+**상품 상세 정보** 
+
+![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/34ac8dc6-1671-44df-92c8-8c3ef5de0c75)
+
+: path parameter로 productId를 전달 받아, 해당하는 product의 상세 정보를 응답하는 API.
+
+- 상품명, 모델넘버, 카테고리, 좋아요 수 등 기본 정보 뿐만 아니라, 즉시 구매가, 즉시 판매가, 최근 거래가, 프리미엄 퍼센트 등의 경매가 관련 데이터도 함께 전달
+- 즉시 구매가는 판매 입찰된 금액 중 가장 낮은 금액
+- 즉시 판매가는 구매 입찰된 금액 중 가장 높은 금액
+- 최근 거래가는 체결 거래 중 가장 최신 거래의 거래 성사 가격
+- 프리미엄 퍼센트는 상품 발매가와 최근 거래가의 비율로 계산
+
+<br>
 
 ***
 
-<br>
- 
  ### Bid
- 
- ***
- 
- <br>
- 
- ### Payment
+
  
  **구매 입찰**
  
@@ -100,28 +105,39 @@ https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/e
 
  **즉시 구매**
   
-  ***
-  
 
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0837d058-7d15-4b29-8b2f-5e2a775153c5
 
  
  **판매 입찰**
  
-  ***
 
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/8e57fdb7-82eb-4eeb-8f2c-d52bc1164ace
 
 
  **즉시 판매**
  
- ***
 
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/0de776fd-5559-4882-b4da-bff2eea4cd7d
 
+**입찰 API**
 
+:[상품 productId, 구매/판매 중 해당하는 입찰 유형, 입찰 금액, 입찰 마감 기한]을 request의 body로 전달받아 입찰 내역이 기록되는 API. 
+- userId는 token의 payload에 저장된 정보를 이용함.
+- 입찰 금액에 따라 즉시 거래가 성사 되기도 함.
+- 즉시 거래가 성사되는 경우, transaction을 사용하여 [거래 건 생성, 입찰 상태를 낙찰로 변경, 거래 상대방의 입찰 내역도 낙찰 상태로 변경] 등의 처리가 동시에 이루어지도록 함.
+- 해당 user와 상품에 대해 기존 입찰 내역이 존재할 경우 '금액' 혹은 '입찰 기한'이 변경되도록 하여, 입찰 건 생성 외에도 입찰 내역 업데이트에 본 API가 사용될 수 있도록 함.
+ 
+**입찰 상세 내역 조회 API**
+
+: 입찰 금액 및 기한 입력 후 이어지는 개인 정보 입력 페이지에서 입찰 내역 확인 용으로 요청되는 입찰 상세 정보 조회 API.
+- path parameter로 상품의 productId를, query parameter로 구매/판매 등의 입찰 유형을 전달 받음. userId는 token의 payload에 저장된 정보를 이용함.
+- 거래 성사 여부에 따라 dealId(거래 Id)와 dealNumber(고유 거래 번호) 전달 여부가 달라짐. 거래가 성사되지 않고 입찰만 완료된 경우 null 값으로로 전달.
+- 상품에 대한 기본 정보와, 입찰 건의 Id, 입찰 금액, 입찰 기한, 수수료 금액 등 전달함.
+ 
  
  <br>
+ ***
  
  ### Search
  
@@ -154,26 +170,36 @@ https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/e
  
  ### Reviews
 
- ***
-
 https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/4a612806-8010-4162-8d5b-fa2b8bff27c5
 
+ **리뷰 게시**
+ 
+ :리뷰를 게시하는는 API
+ - multer-3와 multer를 이용하여 s3에 사진을 올려 사진리뷰를 게시 가능하도록 함
+ 
+ **리뷰 조회**
+ : 사용자가 작성한 리뷰를 불러오는 API
+ - productId를 사용하여 데이터베이스에서 제품에 대한 리뷰를 검색
+ - appDataSource 개체를 사용하여 SQL 쿼리를 실행하여 reviews 테이블에서 특정 필드를 선택하고 users 및review_images 테이블과 LEFT JOIN 함
+ - 제공된 product_id를 기반으로 결과를 필터링
+ - 쿼리가 성공하면 함수는 검색된 데이터를 반환하고, 그렇지 않은 경우 "DATABASE_ERROR" 메시지와 함께 DatabaseError가 발생합
+ 
+ **리뷰 수정**
+ : 리뷰를 업데이트(수정)를 할 수 있는 API
+ - reviewId를 확인하고, 존재하는 reviewId라면 리뷰 수정 가능
+ - reviewImg는 사용자가 이미지를 지우고 싶다면 데이터베이스에서 s3 해당 이미지의 url이 삭제 되도록 구현함
+ 
+ **리뷰 삭제**
+ : 사용자가 작성한 리뷰를 삭제할 수 있는 API
+ - appDataSource 객체를 사용하여 SQL 쿼리를 실행하는 queryRunner를 생성하여 트랜잭션 내에서 리뷰와 해당 이미지를 삭제함
+ - 프로세스 중에 오류가 발생하면 함수는 트랜잭션을 롤백하고 "DATABASE_ERROR" 메시지와 함께 DatabaseError를 발생시킴
+ 
+  ***
+ 
+ <br>
+ 
+ ### Payment
 
-
- **CREATE :**
- 
- **READ :**
- 
- **UPDATE :**
- 
- **DELETE :**
- 
- 
-  ### EVENT Page : for children 05.05
-  
- ***
-
-https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/8d8a5811-bf8e-422c-ba0a-edb2e260ff4e
 
 
  
