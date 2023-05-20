@@ -1,9 +1,9 @@
 # 44-2nd-Dream-backend 경매 플랫폼 제작 프로젝트
 
-박세익([**Github**](https://github.com/), [회고록]()<br>
+박세익([**Github**](https://github.com/), [회고록]())<br>
 장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/57))<br>
 김민서([**Github**](https://github.com/), [회고록](https://just-process.tistory.com/45/))<br>
-송석준([**Github**](https://github.com/), [회고록]()<br>
+송석준([**Github**](https://github.com/), [회고록]())<br>
 <br>
 > **위코드 44기 2차 프로젝트 <br>
 p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p 경매 거래 플랫폼 웹사이트 제작<br>
