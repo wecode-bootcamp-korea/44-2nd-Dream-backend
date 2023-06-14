@@ -1,9 +1,8 @@
 # 44-2nd-Dream-backend 경매 플랫폼 제작 프로젝트
 
-박세익([**Github**](https://github.com/), [회고록]())<br>
-장다희([**Github**](https://github.com/walwald), [회고록](https://walwaldev.tistory.com/57))<br>
+
 김민서([**Github**](https://github.com/), [회고록](https://just-process.tistory.com/45/))<br>
-송석준([**Github**](https://github.com/), [회고록]())<br>
+
 <br>
 > **위코드 44기 2차 프로젝트 <br>
 p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p 경매 거래 플랫폼 웹사이트 제작<br>
@@ -55,85 +54,111 @@ p2p 명품 경매 거래 플랫폼 KREAM을 모델링하여 레고 상품 p2p �
  <br>
  
  
- ## 핵심 기능
+ # 구현 기능 목록
  
 
 ***
 
+### 1. 회원가입 / 로그인(KAKAO Social Login)
+- KAKAO에서 제공하는 API를 활용하여 user 회원가입, 로그인 기능을 구현했습니다.
 
- ### 상세페이지
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/acdfa770-73bd-4775-a10a-e924592faed4
+ ***
  
+ ### 2. 상품 리스트(필터/정렬)
+ - query parameter로 필터 및 정렬 조건을 전달 받아, 그에 따라 상품 리스트를 응답하는 API입니다.
+- 좋아요 많은 순, 즉시 구매가 순, 즉시 판매가 순, 리뷰 순, 프리미엄 가격 순으로 정렬이 가능합니다.
+- 상품 카테고리, 사용 연령, 난이도로 필터 가능합니다.
+<br>
+
+ ![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/f3ea9ebf-8142-414a-9436-07e7f7494f08)
+ <br>
  
-  **체결거래 그래프**<br>
-  : 체결된 거래 그래프 API
-  - 최근 체결된 거래 시세를 시각적으로 한눈에 볼 수 있음
-  - 원하는 기간 내에 이루어진 거래를 선택적으로 볼 수 있게 함
+  ***
   
-  **입찰 정보 확인**<br>
- :최근 입찰된 정보확인 가능한 API
- - 해당 product의 최근 입찰된 정보 확인가능
+### 3. 상품 상세 정보 
+- path parameter로 productId를 전달 받아, 해당하는 product의 상세 정보를 응답하는 API입니다.
+- 상품명, 모델넘버, 카테고리, 좋아요 수 등 기본 정보 뿐만 아니라, 즉시 구매가, 즉시 판매가, 최근 거래가, 프리미엄 퍼센트 등의 경매가 관련 데이터도 함께 전달합니다.
+- 즉시 구매가는 판매 입찰된 금액 중 가장 낮은 금액, 즉시 판매가는 구매 입찰된 금액 중 가장 높은 금액, 최근 거래가는 체결 거래 중 가장 최신 거래의 거래 성사 가격입니다.
+프리미엄 퍼센트는 상품 발매가와 최근 거래가의 비율로 계산됩니다.
+<br>
 
-https://github.com/minseoya/Dream-backend/assets/119482288/db8f6674-7c7d-46bb-a598-9fd31cd374d8
-
-
- 
-
-
- ### Likes
-
-https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/e7475a80-6037-4691-aa5d-7af24bbb8110
-
-**관심상품 등록/삭제**<br>
-: 관심상품 등록/삭제 API
-- path parameter로 productId를 받아 해당 유저의 관심상품 생성
-- 동일한 product와 동일한 user에 대해 API가 재실행될 경우 관심상품 삭제 <br>
-
-**관심상품 리스트**<br>
-: user별로 관심 상품 리스트를 조회하는 API
-- 경매플랫폼이기 때문에 즉시구매가와 함께 관심상품 리스트를 보여줌
+![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/f3ea9ebf-8142-414a-9436-07e7f7494f08)
 
  <br>
  
-   ***
- 
- ### Reviews
+  ***
+   
+### 4. 입찰 
+- 상품 productId, 구매/판매 중 해당하는 입찰 유형, 입찰 금액, 입찰 마감 기한을 request의 body로 전달받아 입찰 내역이 기록되는 API입니다. <br>
+- 구매 입찰, 즉시 구매, 판매 입찰, 즉시 판매 네 가지 경우에 모두 사용할 수 있습니다. <br>
+- userId는 token의 payload에 저장된 정보를 이용합니다. <br>
+- 입찰 금액에 따라 즉시 거래가 성사 될 수 있습니다. <br>
+- 즉시 거래가 성사되는 경우, transaction을 사용하여 거래 건 생성, 입찰 상태를 낙찰로 변경, 거래 상대방의 입찰 내역도 낙찰 상태로 변경 등의 처리가 동시에 이루어지도록 했습니다. <br>
+- 해당 user와 상품에 대해 기존 입찰 내역이 존재할 경우 '금액' 혹은 '입찰 기한'이 변경되도록 하여, 입찰 건 생성 외에도 입찰 내역 업데이트에 본 API가 사용될 수 있습니다. <br>
 
-https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/4a612806-8010-4162-8d5b-fa2b8bff27c5
+ <br>
+ 
+***
+ 
+### 5. 입찰 상세 내역 조회
+- 입찰 금액 및 기한 입력 후 이어지는 개인 정보 입력 페이지에서 입찰 내역 확인을 위한 입찰 상세 정보 조회 API입니다.
+- path parameter로 상품의 productId를, query parameter로 구매/판매 등의 입찰 유형을 전달 받습니다. userId는 token의 payload에 저장된 정보를 이용합니다.
+- 거래 성사 여부에 따라 dealId(거래 Id)와 dealNumber(고유 거래 번호) 전달 여부가 달라집니다. 거래가 성사되지 않고 입찰만 완료된 경우 두 값을 null로 전달합니다.
+- 상품에 대한 기본 정보와, 입찰 건의 Id, 입찰 금액, 입찰 기한, 수수료 금액 등을 전달합니다.
 
- **리뷰 게시**<br>
+ <br>
  
- :리뷰를 게시하는는 API
- - multer-3와 multer를 이용하여 s3에 사진을 올려 사진리뷰를 게시 가능하도록 함 <br>
+  ***
+  
+### 6. 누적 입찰 내역 조회
+- 최근 체결된 거래 시세를 그래프로 시각적으로 한눈에 볼 수 있음,원하는 기간 내에 이루어진 거래를 선택적으로 볼수 있습니다. <br>
+-상품별 입찰된 정보를 확인할수 있습니다
+
+https://github.com/minseoya/Dream-backend/assets/119482288/db8f6674-7c7d-46bb-a598-9fd31cd374d8
+
+ ***
  
+### 7. 상품 검색 / 인기 검색어
+- keyword에 상품명 또는 basic, building, movie, car 등의 카테고리 명 기입 시 검색됩니다.
+- 누적 인기검색어를 조회하는 API입니다.
+- 검색 시 키워드별 검색량이 누적됩니다.
+- 검색어 데이터를 역대 검색량 순으로 정렬하여 상위 10개의 검색어를 응답합니다.
+<br>
+
+ ***
  
+ ### 8. 관심상품 등록/삭제, 관심상품 리스트
+- path parameter로 productId를 받아 해당 유저의 관심상품으로 등록합니다.
+- 동일한 product와 동일한 user에 대해 API가 재실행될 경우 관심상품 삭제 합니다.
+- 경매플랫폼이기 때문에 즉시구매가와 함께 관심상품 리스트를 보여줌니다.
+
+
+https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/e7475a80-6037-4691-aa5d-7af24bbb8110
+
+ <br>
+ 
+  ***
+ 
+ ### 9. 리뷰 CRUD
+ - C : multer-3와 multer를 이용하여 s3에 사진을 올려 사진리뷰를 게시 가능하도록 함 <br>
+ - R : 리뷰 조회 시 productId를 사용하여 데이터베이스에서 제품에 대한 리뷰를 검색합니다. users 및 review_images 테이블과 LEFT JOIN 하여 데이터를 반환합니다
+ - U : 유효한 reviewId인지 확인 후 리뷰가 수정되도록 했습니다.
+ - D : 리뷰와 리뷰 이미지 삭제에 대해 transaction 처리 하였습니다.
+ 
+ https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/119482288/4a612806-8010-4162-8d5b-fa2b8bff27c5
+
   
   ***
   
- ### Payment
+ ### 10. 결제/정산 완료 상태 업데이트 
+- 즉시 구매 후 client가 결제 완료 요청을 보내면, 거래 상태를 결제 완료로 업데이트합니다.
+- 즉시 판매가 체결되면 구매자의 결제 대기로 상태를 업데이트 합니다.
+
  ![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/29151875-568c-4c0c-b3f2-e4600cfbc1e3)
 
 ![image](https://github.com/wecode-bootcamp-korea/44-2nd-Dream-backend/assets/120387100/5e3806a3-0a6b-4d89-b17a-339938c1ac92)
 
-
-**회원 주소 저장**<br>
-: 배송지로 사용될 회원의 주소 저장 API <br>
-
-**회원 계좌번호 & 카드번호 저장**<br>
-: 회원의 신규 입력된 계좌번호/카드 번호 저장 API
-- 판매 입찰 절차 중, user의 카드 번호 및 계좌 번호 입력 과정에서 신규 계좌/카드 번호 등록 시 사용됨
-- userId는 token의 payload에 저장된 정보를 이용함 <br>
-
-
-**즉시 구매 결제**<br>
-: 거래가 성사되었을 때 구매자의 결제 진행 시 사용되는 API
-- 'dealNumber'를 사용하여 데이터베이스에서 구매 거래에 대한 결제 정보를 검색
-- buyings 테이블에 addressId를 추가하고 deals 테이블에서 deal_status를 결제 완료로 변경 <br>
-
-
-**구매 입찰 완료**<br>
-: 구매 입찰 완료 시 사용되는 API
-- 데이터베이스의 구매 입찰에 addressId를 업데이트하도록 설계
-- userId 및 biddingId를 기반으로 데이터베이스의 buyings 테이블에서 address_id필드 업데이트 <br>
 
 
   
