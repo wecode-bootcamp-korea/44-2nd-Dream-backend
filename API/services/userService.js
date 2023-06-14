@@ -41,21 +41,21 @@ const getAddressByUserId = async (userId) => {
   return await userDao.getAddressByUserId(userId);
 };
 
-const inputAddress = async (userId, address, detail_address, receiver) => {
+const inputAddress = async ({ userId, address, detailAddress, receiver }) => {
   const addressId = await userDao.inputAddress(
     userId,
     address,
-    detail_address,
+    detailAddress,
     receiver
   );
   return addressId;
 };
 
-const inputNewAccount = async (accountNumber, userId) => {
+const inputNewAccount = async ({ accountNumber, userId }) => {
   return userDao.inputNewAccount(accountNumber, userId);
 };
 
-const inputNewCard = async (cardNumber, userId) => {
+const inputNewCard = async ({ cardNumber, userId }) => {
   return userDao.inputNewCard(cardNumber, userId);
 };
 
