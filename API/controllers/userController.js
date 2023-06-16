@@ -20,20 +20,20 @@ const getUserById = catchAsync(async (req, res) => {
 
 const inputAddress = catchAsync(async (req, res) => {
   const userId = req.user.id;
-  const { address, detail_address, receiver } = req.body;
+  const { address, detailAddress, receiver } = req.body;
 
-  if (!address || !detail_address || !receiver) {
+  if (!address || !detailAddress || !receiver) {
     throw new BaseError('KEY_ERROR', 400);
   }
 
-  const addressId = await userService.inputAddress(
+  const addressId = await userService.inputAddress({
     userId,
     address,
-    detail_address,
-    receiver
-  );
+    detailAddress,
+    receiver,
+  });
 
-  return res.status(201).json({ addressId: addressId });
+  return res.status(201).json({ addressId });
 });
 
 const getAddressByUserId = catchAsync(async (req, res) => {
@@ -50,7 +50,10 @@ const inputNewAccount = catchAsync(async (req, res) => {
   if (!accountNumber) throw new BaseError('KEY_ERROR', 400);
 
   const userId = req.user.id;
-  const newAccountId = await userService.inputNewCard(accountNumber, userId);
+  const newAccountId = await userService.inputNewCard({
+    accountNumber,
+    userId,
+  });
 
   return res.status(201).json({ accountId: newAccountId });
 });
@@ -61,7 +64,7 @@ const inputNewCard = catchAsync(async (req, res) => {
   if (!cardNumber) throw new BaseError('KEY_ERROR', 400);
 
   const userId = req.user.id;
-  const newCardId = await userService.inputNewCard(cardNumber, userId);
+  const newCardId = await userService.inputNewCard({ cardNumber, userId });
 
   return res.status(201).json({ cardId: newCardId });
 });
