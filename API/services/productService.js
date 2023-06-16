@@ -32,24 +32,24 @@ const getProductByLike = async (userId) => {
   return productList;
 };
 
-const getProductList = async (
+const getProductList = async ({
   categoryId,
   ageId,
   levelId,
   sort,
   sortorder,
   limit,
-  offset
-) => {
-  return await productDao.getProductList(
+  offset,
+}) => {
+  return await productDao.getProductList({
     categoryId,
     ageId,
     levelId,
     sort,
     sortorder,
     limit,
-    offset
-  );
+    offset,
+  });
 };
 
 module.exports = {
