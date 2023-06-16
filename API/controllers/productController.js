@@ -20,23 +20,21 @@ const getProductList = catchAsync(async (req, res) => {
     offset = 0,
   } = req.query;
 
-  const products = await productService.getProductList(
+  const products = await productService.getProductList({
     categoryId,
     ageId,
     levelId,
     sort,
     sortorder,
-    parseInt(limit),
-    parseInt(offset)
-  );
+    limit: parseInt(limit),
+    offset: parseInt(offset),
+  });
 
   return res.status(200).json(products);
 });
 
 const getProductByLike = catchAsync(async (req, res) => {
   const userId = req.user.id;
-
-  if (!userId) return new BaseError('YOU_NOT_INVALID', 401);
 
   const data = await productService.getProductByLike(userId);
 

@@ -1,6 +1,7 @@
 const appDataSource = require('./appDataSource');
 const { DatabaseError } = require('../utils/error');
 const { bidStatusEnum } = require('./enum');
+const ProductsQueryBuilder = require('./productQueryBuilder');
 
 const productDetail = async (productId) => {
   try {
@@ -54,46 +55,23 @@ const isExistingProduct = async (productId) => {
   }
 };
 
-const getProductList = async (
+const getProductList = async ({
   categoryId,
   ageId,
   levelId,
   sort,
   sortorder,
   limit,
-  offset
-) => {
+  offset,
+}) => {
   try {
-    let whereCondition = '';
-    let categoryChose = [];
-
-    if (categoryId)
-      categoryChose.push(`products.category_id IN (${categoryId})`);
-    if (ageId) categoryChose.push(`products.product_age_id IN (${ageId})`);
-    if (levelId)
-      categoryChose.push(`products.product_level_id IN (${levelId})`);
-
-    whereCondition =
-      categoryChose.length > 0
-        ? `WHERE ` + `` + `${categoryChose.join(' AND ')}`
-        : '';
-
-    const sortList = {
-      like: 'likeCount',
-      immediatebuyprice: 'immediateBuyPrice',
-      immediateSalePrice: 'immediateSalePrice',
-      review: 'reviewCount',
-      premium: 'premiumPercent',
-    };
-
-    const sortOrder = {
-      desc: 'DESC',
-      asc: 'ASC',
-    };
-
-    const sortCondition = sortList[sort]
-      ? `${sortList[sort]} ${sortOrder[sortorder]}`
-      : 'products.id';
+    let queryclass = new ProductsQueryBuilder(
+      categoryId,
+      ageId,
+      levelId,
+      sort,
+      sortorder
+    ).build();
 
     const productList = await appDataSource.query(
       `
@@ -140,9 +118,9 @@ const getProductList = async (
         LEFT JOIN buyings ON products.id = buyings.product_id
         LEFT JOIN deals ON buyings.id = deals.buying_id
         LEFT JOIN sellings ON deals.selling_id = sellings.id
-        ${whereCondition}
+        ${queryclass.whereCondition}
         GROUP BY products.id
-        ORDER BY ${sortCondition}
+        ORDER BY ${queryclass.sortCondition}
         LIMIT ? OFFSET ?
     `,
       [limit, offset]
