@@ -33,7 +33,13 @@ const inputBidPrice = catchAsync(async (req, res) => {
 
   const userId = req.user.id;
 
-  await bidService.inputBidPrice(productId, bidType, bidPrice, dueDate, userId);
+  await bidService.inputBidPrice({
+    productId,
+    bidType,
+    bidPrice,
+    dueDate,
+    userId,
+  });
 
   return res.status(201).json({ message: 'BIDDING_IN_SUCCESS' });
 });
@@ -46,11 +52,11 @@ const getBiddingInfo = catchAsync(async (req, res) => {
 
   if (!productId || !bidType) throw new BaseError('KEY_ERROR', 400);
 
-  const biddingInfo = await bidService.getBiddingInfo(
+  const biddingInfo = await bidService.getBiddingInfo({
     productId,
     bidType,
-    userId
-  );
+    userId,
+  });
 
   return res.status(200).json(biddingInfo);
 });

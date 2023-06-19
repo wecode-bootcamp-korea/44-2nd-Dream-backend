@@ -3,15 +3,21 @@ const appDataSource = require('./appDataSource');
 const { bidStatusEnum } = require('./enum');
 const { DatabaseError } = require('../utils/error');
 const graphQueryBuilder = require('./bidQueryBuilder');
-
+const { commissionRateEnum, counterCommissionRateEnum } = require('./enum');
 class BidCase {
   constructor(productId, bidType, bidPrice = null, dueDate = null, userId) {
     this.bidType = bidType;
     this.bidPrice = bidPrice;
     this.productId = productId;
     this.counterpart = bidType == 'buying' ? 'selling' : 'buying';
-    this.commissionRate = bidType == 'buying' ? 0.02 : 0.05;
-    this.counterCommissionRate = bidType == 'buying' ? 0.05 : 0.02;
+    this.commissionRate =
+      bidType == 'buying'
+        ? commissionRateEnum.buying
+        : commissionRateEnum.selling;
+    this.counterCommissionRate =
+      bidType == 'buying'
+        ? counterCommissionRateEnum.buying
+        : counterCommissionRateEnum.selling;
     this.table = `${bidType}s`;
     this.counterTable = `${this.counterpart}s`;
     this.minOrMax = this.counterpart == 'selling' ? 'min' : 'max';
@@ -305,7 +311,7 @@ const bidInfo = async (productId, tableChange = 1) => {
       tableChange
     ).build();
 
-    const buyings = await appDataSource.query(
+    const buying = await appDataSource.query(
       `SELECT bid_price AS bidPrice,
       COUNT(bid_price)AS quantity
       ${buyingcondition}
@@ -319,14 +325,14 @@ const bidInfo = async (productId, tableChange = 1) => {
       `sellings`
     ).build();
 
-    const sellings = await appDataSource.query(
+    const selling = await appDataSource.query(
       `SELECT bid_price AS bidPrice,
       COUNT(bid_price)AS quantity
       ${sellingcondition}
       GROUP BY bid_price`
     );
 
-    return { buyings: buyings, sellings: sellings };
+    return { buying, selling };
   } catch (err) {
     throw new DatabaseError('DATABASE_ERROR');
   }

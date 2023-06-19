@@ -12,7 +12,19 @@ const dealStatusEnum = Object.freeze({
   deliveryDone: 5,
 });
 
+const commissionRateEnum = Object.freeze({
+  buying: 0.02,
+  selling: 0.05,
+});
+
+const counterCommissionRateEnum = Object.freeze({
+  buying: 0.05,
+  selling: 0.02,
+});
+
 module.exports = {
   bidStatusEnum,
   dealStatusEnum,
+  commissionRateEnum,
+  counterCommissionRateEnum,
 };
