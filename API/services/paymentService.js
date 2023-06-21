@@ -1,46 +1,52 @@
 const paymentDao = require('../models/paymentDao');
 
-const createBuyPayment = async (addressId, userId, biddingId, dealNumber) => {
-  await paymentDao.buyingAddress(addressId, userId, biddingId);
-  const [payment] = await paymentDao.createBuyPayment(dealNumber);
-
+const createBuyPayment = async ({
+  addressId,
+  userId,
+  biddingId,
+  dealNumber,
+}) => {
+  await paymentDao.buyingAddress({ addressId, userId, biddingId });
+  await paymentDao.createBuyPayment(dealNumber);
+  const [payment] = paymentDao.getBuyingPayment(dealNumber);
   return payment;
 };
 
-const createSellPayment = async (
+const createSellPayment = async ({
   cardNumberId,
   accountNumberId,
   userId,
-  biddingId
-) => {
-  const [createPayment] = await paymentDao.createSellPayment(
+  biddingId,
+}) => {
+  await paymentDao.createSellPayment({
     cardNumberId,
     accountNumberId,
     userId,
-    biddingId
-  );
+    biddingId,
+  });
+  const [createPayment] = paymentDao.getSellPayment(dealNumber);
   return createPayment;
 };
 
-const buyBidding = async (addressId, userId, biddingId) => {
+const buyBidding = async ({ addressId, userId, biddingId }) => {
   await paymentDao.buyingAddress(addressId, userId, biddingId);
   const [bidingbuy] = await paymentDao.buyBidding(userId, biddingId);
 
   return bidingbuy;
 };
 
-const createSellBidding = async (
+const createSellBidding = async ({
   userId,
   cardNumberId,
   accountNumberId,
-  biddingId
-) => {
-  await paymentDao.updateSellbiddingInfo(
+  biddingId,
+}) => {
+  await paymentDao.updateSellbiddingInfo({
     userId,
     cardNumberId,
     accountNumberId,
-    biddingId
-  );
+    biddingId,
+  });
   const [biddingsell] = await paymentDao.getSellBidding(userId, biddingId);
 
   return biddingsell;

@@ -9,12 +9,12 @@ const createBuyPayment = catchAsync(async (req, res) => {
     throw new BaseError('KEY_ERROR', 400);
   }
 
-  const createPayment = await paymentService.createBuyPayment(
+  const createPayment = await paymentService.createBuyPayment({
     addressId,
     userId,
     biddingId,
-    dealNumber
-  );
+    dealNumber,
+  });
 
   return res.status(201).json(createPayment);
 });
@@ -27,11 +27,11 @@ const buyBidding = catchAsync(async (req, res) => {
     throw new BaseError('KEY_ERROR', 400);
   }
 
-  const buyBidding = await paymentService.buyBidding(
+  const buyBidding = await paymentService.buyBidding({
     addressId,
     userId,
-    biddingId
-  );
+    biddingId,
+  });
 
   return res.status(200).json(buyBidding);
 });
@@ -44,13 +44,13 @@ const createSellPayment = catchAsync(async (req, res) => {
     throw new BaseError('KEY_ERROR', 400);
   }
 
-  const createSellPayment = await paymentService.createSellPayment(
+  const createSellPayment = await paymentService.createSellPayment({
     dealNumber,
     cardNumberId,
     accountNumberId,
     userId,
-    biddingId
-  );
+    biddingId,
+  });
 
   return res.status(201).json(createSellPayment);
 });
@@ -63,12 +63,12 @@ const createSellBidding = catchAsync(async (req, res) => {
     throw new BaseError('KEY_ERROR', 400);
   }
 
-  const createSellBidding = await paymentService.createSellBidding(
+  const createSellBidding = await paymentService.createSellBidding({
     cardNumberId,
     accountNumberId,
     userId,
-    biddingId
-  );
+    biddingId,
+  });
 
   return res.status(200).json(createSellBidding);
 });
