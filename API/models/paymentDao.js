@@ -20,7 +20,7 @@ const buyBidding = async (userId, biddingId) => {
   }
 };
 
-const buyingAddress = async (addressId, userId, biddingId) => {
+const buyingAddress = async ({ addressId, userId, biddingId }) => {
   try {
     return await appDataSource.query(
       `
@@ -56,12 +56,12 @@ const getSellBidding = async (userId, biddingId) => {
   }
 };
 
-const updateSellbiddingInfo = async (
+const updateSellbiddingInfo = async ({
   cardNumberId,
   accountNumberId,
   userId,
-  biddingId
-) => {
+  biddingId,
+}) => {
   const queryRunner = appDataSource.createQueryRunner();
 
   await queryRunner.connect();
@@ -71,21 +71,12 @@ const updateSellbiddingInfo = async (
     await queryRunner.query(
       `
       UPDATE sellings
-      SET card_number_id = ?
+      SET card_number_id = ?,
+      account_number_id = ?
       WHERE user_id = ?
       AND id = ?
       `,
-      [cardNumberId, userId, biddingId]
-    );
-
-    await queryRunner.query(
-      `
-      UPDATE sellings
-      SET account_number_id = ?
-      WHERE user_id = ?
-      AND id = ?
-      `,
-      [accountNumberId, userId, biddingId]
+      [cardNumberId, accountNumberId, userId, biddingId]
     );
 
     await queryRunner.commitTransaction();
@@ -97,13 +88,13 @@ const updateSellbiddingInfo = async (
   }
 };
 
-const createSellPayment = async (
+const createSellPayment = async ({
   dealNumber,
   cardNumberId,
   accountNumberId,
   userId,
-  biddingId
-) => {
+  biddingId,
+}) => {
   const queryRunner = appDataSource.createQueryRunner();
 
   await queryRunner.connect();
@@ -115,19 +106,10 @@ const createSellPayment = async (
     await queryRunner.query(
       `
       UPDATE sellings
-      SET card_number_Id = ?
+      SET card_number_Id = ?,account_number_Id = ?
       WHERE id = ? AND user_id = ?
       `,
-      [cardNumberId, biddingId, userId]
-    );
-
-    await queryRunner.query(
-      `
-      UPDATE sellings
-      SET account_number_Id = ?
-      WHERE id = ? AND user_id = ?
-      `,
-      [accountNumberId, biddingId, userId]
+      [cardNumberId, accountNumberId, biddingId, userId]
     );
 
     await queryRunner.query(
@@ -139,7 +121,20 @@ const createSellPayment = async (
       [paymentAwait, dealNumber]
     );
 
-    const sellPayment = await queryRunner.query(
+    await queryRunner.commitTransaction();
+
+    return;
+  } catch (err) {
+    await queryRunner.rollbackTransaction();
+    throw new DatabaseError('DATABASE_ERROR');
+  } finally {
+    await queryRunner.release();
+  }
+};
+
+const getSellPayment = async (dealNumber) => {
+  try {
+    return await queryRunner.query(
       `
       SELECT
         pi.url AS productImage,
@@ -154,18 +149,10 @@ const createSellPayment = async (
     `,
       [dealNumber]
     );
-
-    await queryRunner.commitTransaction();
-
-    return sellPayment;
   } catch (err) {
-    await queryRunner.rollbackTransaction();
     throw new DatabaseError('DATABASE_ERROR');
-  } finally {
-    await queryRunner.release();
   }
 };
-
 const createBuyPayment = async (dealNumber) => {
   const queryRunner = appDataSource.createQueryRunner();
 
@@ -183,30 +170,36 @@ const createBuyPayment = async (dealNumber) => {
       [paymentDone, dealNumber]
     );
 
-    const payment = await queryRunner.query(
-      `
-    SELECT
-    pi.url AS productImage,
-    d.buying_commission AS commission,
-    s.bid_price AS bidPrice
-    FROM product_images pi
-    JOIN sellings s
-    ON pi.product_id = s.product_id
-    JOIN deals d
-    ON d.selling_id = s.id
-    WHERE d.deal_number = ?
-    `,
-      [dealNumber]
-    );
-
     await queryRunner.commitTransaction();
 
-    return payment;
+    return;
   } catch (err) {
     await queryRunner.rollbackTransaction();
     throw new DatabaseError('DATABASE_ERROR');
   } finally {
     await queryRunner.release();
+  }
+};
+
+const getBuyingPayment = async (dealNumber) => {
+  try {
+    return await queryRunner.query(
+      `
+  SELECT
+  pi.url AS productImage,
+  d.buying_commission AS commission,
+  s.bid_price AS bidPrice
+  FROM product_images pi
+  JOIN sellings s
+  ON pi.product_id = s.product_id
+  JOIN deals d
+  ON d.selling_id = s.id
+  WHERE d.deal_number = ?
+  `,
+      [dealNumber]
+    );
+  } catch (err) {
+    throw new DatabaseError('DATABASE_ERROR');
   }
 };
 
@@ -217,5 +210,6 @@ module.exports = {
   buyingAddress,
   updateSellbiddingInfo,
   getSellBidding,
-  createSellPayment,
+  getBuyingPayment,
+  getSellPayment,
 };
