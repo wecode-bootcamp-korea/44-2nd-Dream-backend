@@ -10,7 +10,7 @@ const createReview = catchAsync(async (req, res) => {
 
   if (!productId) throw new BaseError('NOT_USERID_OR_PRODUCTID', 400);
 
-  await reviewService.createReview(userId, productId, content, title, url);
+  await reviewService.createReview({ userId, productId, content, title, url });
 
   return res.status(201).json({ message: 'SUCCESS_CREATE' });
 });
@@ -28,7 +28,7 @@ const updateReview = catchAsync(async (req, res) => {
   const url = req.file ? req.file.location : '';
   const userId = req.user.id;
 
-  await reviewService.updateReview(userId, reviewId, title, content, url);
+  await reviewService.updateReview({ userId, reviewId, title, content, url });
 
   return res.status(200).json({ message: 'SUCCESS UPDATE' });
 });

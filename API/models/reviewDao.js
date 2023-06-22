@@ -24,7 +24,7 @@ const getReviewByProductId = async (productId) => {
   }
 };
 
-const createReview = async (userId, productId, content, title, url) => {
+const createReview = async ({ userId, productId, content, title, url }) => {
   const queryRunner = appDataSource.createQueryRunner();
 
   await queryRunner.connect();
@@ -42,14 +42,15 @@ const createReview = async (userId, productId, content, title, url) => {
     `,
       [userId, productId, content, title]
     );
-
-    await queryRunner.query(
-      `INSERT INTO review_images
+    if (url) {
+      await queryRunner.query(
+        `INSERT INTO review_images
       (review_id,
         url)
         VALUES(?,?)`,
-      [reviewId.insertId, url]
-    );
+        [reviewId.insertId, url]
+      );
+    }
 
     await queryRunner.commitTransaction();
     return reviewId.insertId;
@@ -94,7 +95,7 @@ const deleteReview = async (reviewId) => {
   }
 };
 
-const updateReview = async (userId, reviewId, title, content, url) => {
+const updateReview = async ({ userId, reviewId, title, content, url }) => {
   try {
     return await appDataSource.query(
       `UPDATE reviews
